@@ -18,10 +18,6 @@ const TopAgentCard = (props: TopAgentProps) => {
 		? `${REACT_APP_API_URL}/${agent.memberImage.replace(/^\/+/, '')}`
 		: '/img/profile/defaultUser.svg';
 
-	console.log('agent:', agent);
-	console.log('memberImage:', agent?.memberImage);
-	console.log('agentImage:', agentImage);
-
 	/** HANDLERS **/
 
 	if (device === 'mobile') {

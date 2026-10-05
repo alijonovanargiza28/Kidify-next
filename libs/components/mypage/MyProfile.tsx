@@ -204,7 +204,6 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 		return false;
 	};
 
-	console.log('CURRENT UPDATE DATA:', updateData);
 
 	/** MOBILE **/
 

@@ -1,17 +1,14 @@
 import { useMemo } from 'react';
 import { ApolloClient, ApolloLink, InMemoryCache, split, from, NormalizedCacheObject } from '@apollo/client';
-
 import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
-
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
-
 import { getJwtToken } from '../libs/auth';
 import { REACT_APP_API_WS } from '../libs/config';
-
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { sweetErrorAlert } from '../libs/sweetAlert';
+import { socketVar } from './store';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
@@ -45,7 +42,8 @@ class LoggingWebSocket {
 	private socket: WebSocket;
 
 	constructor(url: string) {
-		this.socket = new WebSocket(url);
+		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
+		socketVar(this.socket)
 
 		this.socket.onopen = () => {
 			console.log('WebSocket connection!');
