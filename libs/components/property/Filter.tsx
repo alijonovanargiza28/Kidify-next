@@ -543,7 +543,7 @@ const Filter = (props: FilterType) => {
 								onChange={propertyTypeSelectHandler}
 								checked={(searchFilter?.search?.typeList || []).includes(type as PropertyType)}
 							/>
-							<label style={{ cursor: 'pointer' }}>
+							<label htmlFor={type} style={{ cursor: 'pointer' }}>
 								<Typography className="property_type">{type}</Typography>
 							</label>
 						</Stack>
@@ -713,10 +713,10 @@ const Filter = (props: FilterType) => {
 					<Typography className={'title'}>Square meter</Typography>
 					<Stack className="square-year-input">
 						<FormControl>
-							<InputLabel id="demo-simple-select-label">Min</InputLabel>
+							<InputLabel id="property-square-min-label">Min</InputLabel>
 							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
+								labelId="property-square-min-label"
+								id="property-square-min"
 								value={searchFilter?.search?.squaresRange?.start ?? 0}
 								label="Min"
 								onChange={(e: any) => propertySquareHandler(e, 'start')}
@@ -735,10 +735,10 @@ const Filter = (props: FilterType) => {
 						</FormControl>
 						<div className="central-divider"></div>
 						<FormControl>
-							<InputLabel id="demo-simple-select-label">Max</InputLabel>
+							<InputLabel id="property-square-max-label">Max</InputLabel>
 							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
+								labelId="property-square-max-label"
+								id="property-square-max"
 								value={searchFilter?.search?.squaresRange?.end ?? 500}
 								label="Max"
 								onChange={(e: any) => propertySquareHandler(e, 'end')}

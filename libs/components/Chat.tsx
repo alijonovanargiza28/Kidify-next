@@ -1,300 +1,152 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Box, Stack } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
-import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
-import ScrollableFeed from 'react-scrollable-feed';
 import { useReactiveVar } from '@apollo/client';
-
-import { RippleBadge } from '../../scss/MaterialTheme/styled';
-import { socketVar, userVar } from '../../apollo/store';
-
-import { Member } from '../types/member/member';
-import { Messages, REACT_APP_API_URL } from '../config';
-import { sweetErrorAlert } from '../sweetAlert';
-
-interface MessagePayload {
-	event: string;
-	text: string;
-	memberData: Member | null;
-}
-
-interface InfoPayload {
-	event: string;
-	totalClients: number;
-	memberData: Member | null;
-	action: string;
-}
-
-const Chat = () => {
-	const chatContentRef = useRef<HTMLDivElement>(null);
-	const textInput = useRef<HTMLInputElement>(null);
-
-	const [messagesList, setMessagesList] = useState<MessagePayload[]>([]);
-	const [onlineUsers, setOnlineUsers] = useState<number>(0);
-	const [messageInput, setMessageInput] = useState<string>('');
-	const [open, setOpen] = useState<boolean>(false);
-	const [openButton, setOpenButton] = useState<boolean>(false);
-
-	const router = useRouter();
-
-	const user = useReactiveVar(userVar);
-	const socket = useReactiveVar(socketVar);
-
-	/** LIFECYCLES **/
-
+import { Button, TextField, Alert } from '@mui/material';
+import { userVar, socketVar } from '../../apollo/store';
+import { getJwtToken } from '../auth';
+import { REACT_APP_API_WS } from '../config';
+import { useMarketplace, useAction } from '../hooks/useMarketplace';
+import { State, Pager } from './common/Marketplace';
+export default function Chat() {
+	const router = useRouter(),
+		user = useReactiveVar(userVar),
+		peerId = String(router.query.peerId || ''),
+		productId = String(router.query.productId || ''),
+		[text, setText] = useState(''),
+		[page, setPage] = useState(1),
+		[connected, setConnected] = useState(false),
+		[sending, setSending] = useState(false),
+		[error, setError] = useState('');
+	const q = useMarketplace('getMyMessages', { input: { page, limit: 30 }, ...(peerId ? { peerId } : {}) }, !user._id),
+		peer = useMarketplace('getMember', { memberId: peerId }, !peerId),
+		action = useAction(),
+		refetch = useRef(q.refetch);
+	refetch.current = q.refetch;
 	useEffect(() => {
-		if (!socket) return;
-
-		socket.onmessage = (msg: MessageEvent) => {
-			try {
-				const data = JSON.parse(msg.data);
-
-				console.log('WebSocket message:', data);
-
-				switch (data.event) {
-					case 'info': {
-						const newInfo: InfoPayload = data;
-
-						setOnlineUsers(newInfo.totalClients);
-
-						break;
+		if (!user._id) return;
+		let stopped = false,
+			retry: ReturnType<typeof setTimeout>,
+			socket: WebSocket;
+		const connect = () => {
+			socket = new WebSocket(REACT_APP_API_WS);
+			socketVar(socket);
+			socket.onopen = () => socket.send(JSON.stringify({ event: 'authenticate', data: { token: getJwtToken() } }));
+			socket.onmessage = (e) => {
+				try {
+					const m = JSON.parse(e.data);
+					if (m.event === 'authenticated') {
+						setConnected(true);
+						setError('');
 					}
-
-					case 'getMessages': {
-						const list: MessagePayload[] = data.list;
-
-						setMessagesList(list);
-
-						break;
+					if (m.event === 'newMessage' || m.event === 'messageSent') {
+						void refetch.current();
 					}
-
-					case 'message': {
-						const newMessage: MessagePayload = data;
-
-						setMessagesList((prev) => [...prev, newMessage]);
-
-						break;
-					}
-
-					default:
-						break;
+					if (m.error) setError('Chat authentication failed. Please sign in again.');
+				} catch {
+					setError('Unable to read chat update.');
 				}
-			} catch (err) {
-				console.log('WebSocket message error:', err);
-			}
+			};
+			socket.onclose = () => {
+				setConnected(false);
+				if (!stopped) retry = setTimeout(connect, 5000);
+			};
+			socket.onerror = () => setConnected(false);
 		};
-	}, [socket]);
-
+		connect();
+		return () => {
+			stopped = true;
+			clearTimeout(retry);
+			socket?.close();
+			socketVar(null);
+		};
+	}, [user._id]);
 	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			setOpenButton(true);
-		}, 100);
-
-		return () => clearTimeout(timeoutId);
-	}, []);
-
-	useEffect(() => {
-		setOpenButton(false);
-	}, [router.pathname]);
-
-	/** HANDLERS **/
-
-	const handleOpenChat = () => {
-		setOpen((prevState) => !prevState);
-	};
-
-	const getInputMessageHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		const text = e.target.value;
-
-		setMessageInput(text);
-	}, []);
-
-	const getKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		try {
-			if (e.key === 'Enter') {
-				onClickHandler();
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	const onClickHandler = () => {
-		try {
-			if (!messageInput.trim()) {
-				sweetErrorAlert(Messages.error4);
-
-				return;
-			}
-
-			if (!socket) {
-				console.log('WebSocket mavjud emas');
-
-				return;
-			}
-
-			if (socket.readyState !== WebSocket.OPEN) {
-				console.log('WebSocket hali ochilmagan');
-
-				return;
-			}
-
-			socket.send(
-				JSON.stringify({
-					event: 'message',
-					data: messageInput,
-				}),
-			);
-
-			setMessageInput('');
-		} catch (err) {
-			console.log('Message send error:', err);
-		}
-	};
-
+		if (!peerId) return;
+		for (const m of q.value?.list || [])
+			if (m.receiverId === user._id && !m.isRead) void action('markMessageRead', { messageId: m._id }).catch(() => {});
+	}, [peerId, q.value?.list?.map((m: any) => m._id + String(m.isRead)).join(','), user._id]);
+	const peers = Array.from(
+		new Set((q.value?.list || []).map((m: any) => (m.senderId === user._id ? m.receiverId : m.senderId))),
+	) as string[];
 	return (
-		<Stack className="chatting">
-			{/* CHAT BUTTON */}
-
-			{openButton ? (
-				<button className="chat-button" onClick={handleOpenChat}>
-					{open ? <CloseFullscreenIcon /> : <MarkChatUnreadIcon />}
-				</button>
-			) : null}
-
-			{/* CHAT FRAME */}
-
-			<Stack className={`chat-frame ${open ? 'open' : ''}`}>
-				{/* CHAT TOP */}
-
-				<Box className={'chat-top'} component={'div'}>
-					<div
-						style={{
-							fontFamily: 'Nunito',
-						}}
-					>
-						Online Chat
-					</div>
-
-					<RippleBadge
-						style={{
-							margin: '-18px 0 0 21px',
-						}}
-						badgeContent={onlineUsers}
-					/>
-				</Box>
-
-				{/* CHAT CONTENT */}
-
-				<Box className={'chat-content'} id="chat-content" ref={chatContentRef} component={'div'}>
-					<ScrollableFeed>
-						<Stack className={'chat-main'}>
-							{/* WELCOME MESSAGE */}
-
-							<Box
-								flexDirection={'row'}
-								style={{
-									display: 'flex',
-								}}
-								sx={{
-									m: '10px 0px',
-								}}
-								component={'div'}
-							>
-								<div className={'welcome'}>Welcome to Live chat!</div>
-							</Box>
-
-							{/* MESSAGES */}
-
-							{messagesList.map((ele: MessagePayload, index: number) => {
-								const { text, memberData } = ele;
-
-								const memberImage = memberData?.memberImage
-									? `${REACT_APP_API_URL}/${memberData.memberImage}`
-									: '/img/profile/defaultUser.svg';
-
-								/*
-								 * Agar message hozirgi
-								 * userniki bo'lsa:
-								 *
-								 * RIGHT SIDE
-								 */
-
-								if (String(memberData?._id) === String(user?._id)) {
-									return (
-										<Box
-											key={index}
-											component={'div'}
-											flexDirection={'row'}
-											style={{
-												display: 'flex',
-											}}
-											alignItems={'flex-end'}
-											justifyContent={'flex-end'}
-											sx={{
-												m: '10px 0px',
-											}}
-										>
-											<div className={'msg-right'}>{text}</div>
-										</Box>
-									);
-								}
-
-								/*
-								 * Boshqa user yozgan bo'lsa:
-								 *
-								 * LEFT SIDE
-								 */
-
-								return (
-									<Box
-										key={index}
-										component={'div'}
-										flexDirection={'row'}
-										style={{
-											display: 'flex',
-										}}
-										sx={{
-											m: '10px 0px',
-										}}
-									>
-										<Avatar alt={memberData?.memberNick ?? 'Guest'} src={memberImage} />
-
-										<div className={'msg-left'}>{text}</div>
-									</Box>
-								);
-							})}
-						</Stack>
-					</ScrollableFeed>
-				</Box>
-
-				{/* CHAT INPUT */}
-
-				<Box className={'chat-bott'} component={'div'}>
-					<input
-						ref={textInput}
-						type={'text'}
-						name={'message'}
-						className={'msg-input'}
-						placeholder={'Type message'}
-						value={messageInput}
-						onChange={getInputMessageHandler}
-						onKeyDown={getKeyHandler}
-					/>
-
-					<button className={'send-msg-btn'} onClick={onClickHandler}>
-						<SendIcon
-							style={{
-								color: '#fff',
+		<>
+			<h2>Messages</h2>
+			<p>{connected ? 'Live updates connected' : 'Live updates reconnecting; you can still send messages.'}</p>
+			{error && <Alert severity="warning">{error}</Alert>}
+			<div className="chat-layout">
+				<aside className="account-sidebar">
+					{peerId && <Button onClick={() => router.push('/messages')}>All conversations</Button>}
+					{peers.map((id) => (
+						<Button
+							key={id}
+							onClick={() => {
+								setPage(1);
+								router.push({ pathname: '/messages', query: { peerId: id } });
 							}}
-						/>
-					</button>
-				</Box>
-			</Stack>
-		</Stack>
+						>
+							Conversation {id.slice(-6)}
+						</Button>
+					))}
+				</aside>
+				<section>
+					{peerId ? (
+						<>
+							<h3>{peer.value?.memberNick || 'Conversation'}</h3>
+							{productId && (
+								<p>
+									About product <a href={'/products/detail?id=' + productId}>{productId.slice(-8)}</a>
+								</p>
+							)}
+							<State query={q}>
+								<div className="message-list">
+									{[...(q.value?.list || [])].reverse().map((m: any) => (
+										<div key={m._id} className={'message-bubble ' + (m.senderId === user._id ? 'mine' : '')}>
+											<p>{m.text}</p>
+											<small>
+												{new Date(m.createdAt).toLocaleString()}{' '}
+												{m.senderId === user._id && (m.isRead ? '· Read' : '· Sent')}
+											</small>
+										</div>
+									))}
+								</div>
+							</State>
+							<Pager value={q.value} page={page} limit={30} onChange={setPage} />
+							<form
+								className="chat-compose"
+								onSubmit={async (e) => {
+									e.preventDefault();
+									setSending(true);
+									try {
+										await action('sendMessage', {
+											input: { receiverId: peerId, text, ...(productId ? { productId } : {}) },
+										});
+										setText('');
+									} catch {
+									} finally {
+										setSending(false);
+									}
+								}}
+							>
+								<TextField
+									label="Message"
+									multiline
+									value={text}
+									onChange={(e) => setText(e.target.value)}
+									inputProps={{ maxLength: 3000 }}
+								/>
+								<Button variant="contained" type="submit" disabled={sending || !text.trim()}>
+									Send
+								</Button>
+							</form>
+						</>
+					) : (
+						<State query={q} empty={!q.value?.list?.length}>
+							<p>Select a conversation, or choose Ask Seller on a product.</p>
+							<Pager value={q.value} page={page} limit={30} onChange={setPage} />
+						</State>
+					)}
+				</section>
+			</div>
+		</>
 	);
-};
-
-export default Chat;
+}

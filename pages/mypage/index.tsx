@@ -1,198 +1,157 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { NextPage } from 'next';
-import { Stack } from '@mui/material';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
-import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import MyProperties from '../../libs/components/mypage/MyProperties';
-import MyFavorites from '../../libs/components/mypage/MyFavorites';
-import RecentlyVisited from '../../libs/components/mypage/RecentlyVisited';
-import AddProperty from '../../libs/components/mypage/AddNewProperty';
-import MyProfile from '../../libs/components/mypage/MyProfile';
-import MyArticles from '../../libs/components/mypage/MyArticles';
-import { useMutation, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
+import { Button } from '@mui/material';
 import { userVar } from '../../apollo/store';
-import MyMenu from '../../libs/components/mypage/MyMenu';
-import WriteArticle from '../../libs/components/mypage/WriteArticle';
-import MemberFollowers from '../../libs/components/member/MemberFollowers';
-import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
-import MemberFollowings from '../../libs/components/member/MemberFollowings';
+import { logOut } from '../../libs/auth';
+import withLayout from '../../libs/components/layout/LayoutBasic';
+import { RequireMember, Photo, PageTitle } from '../../libs/components/common/Marketplace';
+import Favorites from '../../libs/components/mypage/MarketplaceFavorites';
+import Orders from '../../libs/components/mypage/MarketplaceOrders';
+import Manage, { Members } from '../../libs/components/mypage/MarketplaceManage';
+import {
+	Profile,
+	Addresses,
+	Followings,
+	LikedArticles,
+	Dashboard,
+	Delivery,
+} from '../../libs/components/mypage/MarketplaceAccount';
+import Support from '../../libs/components/cs/MarketplaceSupport';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
-import { Messages } from '../../libs/config';
-
 export const getStaticProps = async ({ locale }: any) => ({
-	props: {
-		...(await serverSideTranslations(locale, ['common'])),
-	},
+	props: { ...(await serverSideTranslations(locale, ['common'])) },
 });
-
-const MyPage: NextPage = () => {
-	const device = useDeviceDetect();
-	const user = useReactiveVar(userVar);
-	const router = useRouter();
-	const category: any = router.query?.category ?? 'myProfile';
-
-	/** APOLLO REQUESTS **/
-
-	const [subscribe] = useMutation(SUBSCRIBE);
-	const [unsubscribe] = useMutation(UNSUBSCRIBE);
-	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
-
-	/** LIFECYCLES **/
-
-	useEffect(() => {
-		if (!user._id) {
-			router.push('/').then();
-		}
-	}, [user]);
-
-	/** HANDLERS **/
-
-	const subscribeHandler = async (id: string, refetch: any, query: any) => {
-		try {
-			console.log('id:', id);
-
-			if (!id) {
-				throw new Error(Messages.error1);
-			}
-
-			if (!user._id) {
-				throw new Error(Messages.error2);
-			}
-
-			await subscribe({
-				variables: {
-					input: id,
-				},
-			});
-
-			await sweetTopSmallSuccessAlert('Subscribed!', 800);
-
-			await refetch({
-				input: query,
-			});
-		} catch (err: any) {
-			sweetErrorHandling(err).then();
-		}
-	};
-
-	/** HANDLERS **/
-
-
-	const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
-		try {
-			if (!id) {
-				throw new Error(Messages.error1);
-			}
-
-			if (!user._id) {
-				throw new Error(Messages.error2);
-			}
-
-			await unsubscribe({
-				variables: {
-					input: id,
-				},
-			});
-
-			await sweetTopSmallSuccessAlert('Unsubscribed!', 800);
-
-			await refetch({
-				input: query,
-			});
-		} catch (err: any) {
-			sweetErrorHandling(err).then();
-		}
-	};
-
-	const likeMemberHandler = async (id: string, refetch: any, query: any) => {
-		try {
-			if (!id) {
-				return;
-			}
-
-			if (!user._id) {
-				throw new Error(Messages.error2);
-			}
-
-			await likeTargetMember({
-				variables: {
-					input: id,
-				},
-			});
-
-			await sweetTopSmallSuccessAlert('Success!', 800);
-
-			await refetch({
-				input: query,
-			});
-		} catch (err: any) {
-			console.log('ERROR, likeMemberHandler:', err?.message);
-
-			sweetMixinErrorAlert(err?.message || 'Something went wrong!').then();
-		}
-	};
-
-
-	/** LIFECYCLES **/
-	useEffect(() => {
-		if (!user._id) router.push('/').then();
-	}, [user]);
-
-	const redirectToMemberPageHandler = async (memberId: string) => {
-		try {
-			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
-			else await router.push(`/member?memberId=${memberId}`);
-		} catch (error) {
-			await sweetErrorHandling(error);
-		}
-	};
-
-	if (device === 'mobile') {
-		return <div>MY PAGE</div>;
-	} else {
-		return (
-			<div id="my-page" style={{ position: 'relative' }}>
-				<div className="container">
-					<Stack className={'my-page'}>
-						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
-								<MyMenu />
-							</Stack>
-							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
-									{category === 'addProperty' && <AddProperty />}
-									{category === 'myProperties' && <MyProperties />}
-									{category === 'myFavorites' && <MyFavorites />}
-									{category === 'recentlyVisited' && <RecentlyVisited />}
-									{category === 'myArticles' && <MyArticles />}
-									{category === 'writeArticle' && <WriteArticle />}
-									{category === 'myProfile' && <MyProfile />}
-									{category === 'followers' && (
-										<MemberFollowers
-											subscribeHandler={subscribeHandler}
-											unsubscribeHandler={unsubscribeHandler}
-											likeMemberHandler={likeMemberHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
-										/>
-									)}
-									{category === 'followings' && (
-										<MemberFollowings
-											subscribeHandler={subscribeHandler}
-											unsubscribeHandler={unsubscribeHandler}
-											likeMemberHandler={likeMemberHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
-										/>
-									)}
-								</Stack>
-							</Stack>
-						</Stack>
-					</Stack>
-				</div>
-			</div>
-		);
-	}
+const common = [
+	['profile', 'My Profile'],
+	['favorites', 'My Favorites'],
+	['followings', 'My Followings'],
+	['visited', 'Recently Visited'],
+	['likes', 'Likes'],
+	['orders', 'My Orders'],
+	['addresses', 'Addresses'],
+	['support', 'Support'],
+];
+const roleNav: any = {
+	USER: [],
+	SELLER: [
+		['dashboard', 'Overview'],
+		['products', 'All Products'],
+		['sellerOrders', 'Seller Orders'],
+		['articles', 'My Articles'],
+	],
+	ADMIN: [
+		['dashboard', 'Overview'],
+		['users', 'All Users'],
+		['sellers', 'All Sellers'],
+		['cs', 'CS Members'],
+		['products', 'All Products'],
+		['adminOrders', 'All Orders'],
+		['delivery', 'Delivery'],
+		['faq', 'FAQ'],
+		['articles', 'Article Management'],
+		['events', 'Event Management'],
+		['brands', 'Brands'],
+		['coupons', 'Coupons'],
+		['codes', 'dinaBaby'],
+	],
+	CS: [['delivery', 'Delivery']],
 };
-
-export default withLayoutBasic(MyPage);
+function MyPage() {
+	const router = useRouter(),
+		user = useReactiveVar(userVar);
+	const nav = [...(roleNav[user.memberType] || []), ...common],
+		requested = String(router.query.category || 'profile'),
+		aliases: any = {
+			myProfile: 'profile',
+			myFavorites: 'favorites',
+			recentlyVisited: 'visited',
+			myArticles: 'articles',
+			writeArticle: 'articles',
+			myProperties: 'products',
+			addProperty: 'products',
+		};
+	const category = aliases[requested] || requested;
+	const permitted = nav.some(([k]) => k === category) || (category === 'delivery' && router.query.id);
+	let content: React.ReactNode = <p>Select an item from your account menu.</p>;
+	if (permitted) {
+		switch (category) {
+			case 'profile':
+				content = <Profile user={user} />;
+				break;
+			case 'favorites':
+				content = <Favorites />;
+				break;
+			case 'visited':
+				content = <Favorites visited />;
+				break;
+			case 'followings':
+				content = <Followings />;
+				break;
+			case 'likes':
+				content = <LikedArticles />;
+				break;
+			case 'addresses':
+				content = <Addresses />;
+				break;
+			case 'orders':
+				content = <Orders />;
+				break;
+			case 'sellerOrders':
+				content = <Orders role="SELLER" />;
+				break;
+			case 'adminOrders':
+				content = <Orders role="ADMIN" />;
+				break;
+			case 'support':
+				content = <Support user={user} />;
+				break;
+			case 'delivery':
+				content = <Delivery staff={['ADMIN', 'CS'].includes(user.memberType)} />;
+				break;
+			case 'dashboard':
+				content = <Dashboard role={user.memberType} />;
+				break;
+			case 'users':
+			case 'sellers':
+			case 'cs':
+				content = <Members type={category === 'sellers' ? 'SELLER' : category === 'cs' ? 'CS' : undefined} />;
+				break;
+			default:
+				content = <Manage section={category} user={user} />;
+		}
+	}
+	return (
+		<RequireMember user={user}>
+			<PageTitle title="My Page" subtitle="Your little world, thoughtfully organized." />
+			{user._id && (
+				<div className="account-layout">
+					<aside className="account-sidebar">
+						<Photo src={user.memberImage} alt={user.memberNick} />
+						<div>
+							<h3>{user.memberNick}</h3>
+							<small>{user.memberType}</small>
+						</div>
+						{nav.map(([k, label]) => (
+							<Link
+								key={k}
+								className={category === k ? 'active' : ''}
+								href={{ pathname: '/mypage', query: { category: k } }}
+							>
+								{label}
+							</Link>
+						))}
+						<Link href="/messages">Messages</Link>
+						<Link href="/notifications">Notifications</Link>
+						<Button onClick={logOut}>Sign out</Button>
+					</aside>
+					<section className="account-content" key={category}>
+						{content}
+					</section>
+				</div>
+			)}
+		</RequireMember>
+	);
+}
+export default withLayout(MyPage);

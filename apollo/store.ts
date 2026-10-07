@@ -25,4 +25,4 @@ export const userVar = makeVar<CustomJwtPayload>({
 });
 
 //@ts-ignore
-export const socketVar = makeVar<WebSocet>()
+export const socketVar = makeVar<WebSocket | null>(null);
