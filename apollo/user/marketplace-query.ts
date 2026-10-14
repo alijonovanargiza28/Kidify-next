@@ -1,11 +1,9 @@
 import { gql } from '@apollo/client';
-
 export const sayHello = gql`
 	query sayHello {
 		sayHello
 	}
 `;
-
 export const getCoupons = gql`
 	query getCoupons($input: PageInquiry!) {
 		getCoupons(input: $input) {
@@ -30,7 +28,6 @@ export const getCoupons = gql`
 		}
 	}
 `;
-
 export const validateCoupon = gql`
 	query validateCoupon($code: String!) {
 		validateCoupon(code: $code) {
@@ -39,13 +36,13 @@ export const validateCoupon = gql`
 		}
 	}
 `;
-
 export const getMyCart = gql`
 	query getMyCart {
 		getMyCart {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -56,6 +53,9 @@ export const getMyCart = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -72,6 +72,9 @@ export const getMyCart = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -102,11 +105,13 @@ export const getMyCart = gql`
 		}
 	}
 `;
-
 export const getProducts = gql`
 	query getProducts($input: ProductsInquiry!) {
 		getProducts(input: $input) {
 			list {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -123,6 +128,9 @@ export const getProducts = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -153,10 +161,68 @@ export const getProducts = gql`
 		}
 	}
 `;
-
+export const getTodayRecommendations = gql`
+	query getTodayRecommendations {
+		getTodayRecommendations {
+			list {
+				saleStart
+				saleEnd
+				productInstructions
+				_id
+				productName
+				productDesc
+				productPrice
+				productImages
+				productType
+				productCategory
+				productCollection
+				productBrandId
+				productDiscount
+				material
+				careInstructions
+				deliveryReturnInfo
+				productSellerId
+				productStatus
+				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
+					_id
+					color
+					size
+					stock
+					sku
+				}
+				productViews
+				productFavorites
+				productComments
+				productReviews
+				productSales
+				averageRating
+				productRank
+				finalPrice
+				productOldPrice
+				badges
+				meLiked {
+					memberId
+					likeRefId
+					myFavorite
+				}
+				createdAt
+				updatedAt
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
 export const getProduct = gql`
 	query getProduct($productId: String!) {
 		getProduct(productId: $productId) {
+			saleStart
+			saleEnd
+			productInstructions
 			_id
 			productName
 			productDesc
@@ -173,6 +239,9 @@ export const getProduct = gql`
 			productSellerId
 			productStatus
 			productVariants {
+				ageMinMonths
+				ageMaxMonths
+				images
 				_id
 				color
 				size
@@ -199,11 +268,13 @@ export const getProduct = gql`
 		}
 	}
 `;
-
 export const getRelatedProducts = gql`
 	query getRelatedProducts($productId: String!, $input: ProductsInquiry!) {
 		getRelatedProducts(productId: $productId, input: $input) {
 			list {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -220,6 +291,9 @@ export const getRelatedProducts = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -250,11 +324,13 @@ export const getRelatedProducts = gql`
 		}
 	}
 `;
-
 export const getAllProductsByAdmin = gql`
 	query getAllProductsByAdmin($input: ProductsInquiry!) {
 		getAllProductsByAdmin(input: $input) {
 			list {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -271,6 +347,9 @@ export const getAllProductsByAdmin = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -301,11 +380,13 @@ export const getAllProductsByAdmin = gql`
 		}
 	}
 `;
-
 export const getMyProducts = gql`
 	query getMyProducts($input: ProductsInquiry!) {
 		getMyProducts(input: $input) {
 			list {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -322,6 +403,9 @@ export const getMyProducts = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -352,11 +436,13 @@ export const getMyProducts = gql`
 		}
 	}
 `;
-
 export const getMyFavoriteProducts = gql`
 	query getMyFavoriteProducts($input: PageInquiry!) {
 		getMyFavoriteProducts(input: $input) {
 			list {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -373,6 +459,9 @@ export const getMyFavoriteProducts = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -403,7 +492,6 @@ export const getMyFavoriteProducts = gql`
 		}
 	}
 `;
-
 export const getMyLikedArticles = gql`
 	query getMyLikedArticles($input: PageInquiry!) {
 		getMyLikedArticles(input: $input) {
@@ -471,11 +559,13 @@ export const getMyLikedArticles = gql`
 		}
 	}
 `;
-
 export const getRecentlyVisitedProducts = gql`
 	query getRecentlyVisitedProducts($input: PageInquiry!) {
 		getRecentlyVisitedProducts(input: $input) {
 			list {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -492,6 +582,9 @@ export const getRecentlyVisitedProducts = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -522,7 +615,6 @@ export const getRecentlyVisitedProducts = gql`
 		}
 	}
 `;
-
 export const getMyAddresses = gql`
 	query getMyAddresses {
 		getMyAddresses {
@@ -541,7 +633,6 @@ export const getMyAddresses = gql`
 		}
 	}
 `;
-
 export const getMyOrders = gql`
 	query getMyOrders($input: OrdersInquiry!) {
 		getMyOrders(input: $input) {
@@ -593,7 +684,6 @@ export const getMyOrders = gql`
 		}
 	}
 `;
-
 export const getOrder = gql`
 	query getOrder($orderId: String!) {
 		getOrder(orderId: $orderId) {
@@ -640,7 +730,6 @@ export const getOrder = gql`
 		}
 	}
 `;
-
 export const getSellerOrders = gql`
 	query getSellerOrders($input: OrdersInquiry!) {
 		getSellerOrders(input: $input) {
@@ -672,7 +761,6 @@ export const getSellerOrders = gql`
 		}
 	}
 `;
-
 export const getAllOrdersByAdmin = gql`
 	query getAllOrdersByAdmin($input: OrdersInquiry!) {
 		getAllOrdersByAdmin(input: $input) {
@@ -724,7 +812,6 @@ export const getAllOrdersByAdmin = gql`
 		}
 	}
 `;
-
 export const getPayment = gql`
 	query getPayment($paymentId: String!) {
 		getPayment(paymentId: $paymentId) {
@@ -738,7 +825,6 @@ export const getPayment = gql`
 		}
 	}
 `;
-
 export const getPaymentsByAdmin = gql`
 	query getPaymentsByAdmin($input: OrdersInquiry!) {
 		getPaymentsByAdmin(input: $input) {
@@ -757,7 +843,6 @@ export const getPaymentsByAdmin = gql`
 		}
 	}
 `;
-
 export const getDelivery = gql`
 	query getDelivery($deliveryId: String!) {
 		getDelivery(deliveryId: $deliveryId) {
@@ -781,7 +866,6 @@ export const getDelivery = gql`
 		}
 	}
 `;
-
 export const getDeliveries = gql`
 	query getDeliveries($input: OrdersInquiry!) {
 		getDeliveries(input: $input) {
@@ -810,11 +894,17 @@ export const getDeliveries = gql`
 		}
 	}
 `;
-
-export const getReviews = gql`
-	query getReviews($group: ReviewGroup!, $targetId: String!, $input: PageInquiry!) {
-		getReviews(group: $group, targetId: $targetId, input: $input) {
+export const getSellerTopReviews = gql`
+	query getSellerTopReviews($sellerId: String!) {
+		getSellerTopReviews(sellerId: $sellerId) {
 			list {
+				likeCount
+				adminReply
+                replyRole
+                images
+                verifiedPurchase
+				replyAuthorId
+				replyAt
 				_id
 				group
 				targetId
@@ -831,11 +921,46 @@ export const getReviews = gql`
 		}
 	}
 `;
-
+export const getReviews = gql`
+	query getReviews($group: ReviewGroup!, $targetId: String!, $input: PageInquiry!) {
+		getReviews(group: $group, targetId: $targetId, input: $input) {
+            ratingBreakdown { rating count }
+			list {
+                authorNick authorImage
+				likeCount
+				adminReply
+                replyRole
+                images
+                verifiedPurchase
+				replyAuthorId
+				replyAt
+				_id
+				group
+				targetId
+				orderId
+				authorId
+				rating
+				text
+				status
+				createdAt
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
 export const getReviewsByAdmin = gql`
 	query getReviewsByAdmin($group: ReviewGroup!, $targetId: String!, $input: PageInquiry!) {
 		getReviewsByAdmin(group: $group, targetId: $targetId, input: $input) {
 			list {
+				likeCount
+				adminReply
+                replyRole
+                images
+                verifiedPurchase
+				replyAuthorId
+				replyAt
 				_id
 				group
 				targetId
@@ -852,7 +977,6 @@ export const getReviewsByAdmin = gql`
 		}
 	}
 `;
-
 export const getMyMessages = gql`
 	query getMyMessages($input: PageInquiry!, $peerId: String) {
 		getMyMessages(input: $input, peerId: $peerId) {
@@ -871,7 +995,6 @@ export const getMyMessages = gql`
 		}
 	}
 `;
-
 export const getEvent = gql`
 	query getEvent($id: String!) {
 		getEvent(id: $id) {
@@ -888,7 +1011,6 @@ export const getEvent = gql`
 		}
 	}
 `;
-
 export const getEvents = gql`
 	query getEvents($input: PageInquiry!, $text: String) {
 		getEvents(input: $input, text: $text) {
@@ -910,7 +1032,6 @@ export const getEvents = gql`
 		}
 	}
 `;
-
 export const getEventsByAdmin = gql`
 	query getEventsByAdmin($input: PageInquiry!) {
 		getEventsByAdmin(input: $input) {
@@ -932,7 +1053,6 @@ export const getEventsByAdmin = gql`
 		}
 	}
 `;
-
 export const getFAQ = gql`
 	query getFAQ($id: String!) {
 		getFAQ(id: $id) {
@@ -947,7 +1067,6 @@ export const getFAQ = gql`
 		}
 	}
 `;
-
 export const getFAQs = gql`
 	query getFAQs($input: PageInquiry!, $text: String, $category: FAQCategory) {
 		getFAQs(input: $input, text: $text, category: $category) {
@@ -967,7 +1086,6 @@ export const getFAQs = gql`
 		}
 	}
 `;
-
 export const getFAQsByAdmin = gql`
 	query getFAQsByAdmin($input: PageInquiry!) {
 		getFAQsByAdmin(input: $input) {
@@ -987,7 +1105,6 @@ export const getFAQsByAdmin = gql`
 		}
 	}
 `;
-
 export const getMySupportTickets = gql`
 	query getMySupportTickets($input: PageInquiry!) {
 		getMySupportTickets(input: $input) {
@@ -1014,7 +1131,6 @@ export const getMySupportTickets = gql`
 		}
 	}
 `;
-
 export const getSupportTicket = gql`
 	query getSupportTicket($ticketId: String!) {
 		getSupportTicket(ticketId: $ticketId) {
@@ -1036,7 +1152,6 @@ export const getSupportTicket = gql`
 		}
 	}
 `;
-
 export const getSupportQueue = gql`
 	query getSupportQueue($input: PageInquiry!) {
 		getSupportQueue(input: $input) {
@@ -1048,7 +1163,6 @@ export const getSupportQueue = gql`
 		}
 	}
 `;
-
 export const getSupportOrder = gql`
 	query getSupportOrder($ticketId: String!) {
 		getSupportOrder(ticketId: $ticketId) {
@@ -1095,7 +1209,6 @@ export const getSupportOrder = gql`
 		}
 	}
 `;
-
 export const getAdminDashboard = gql`
 	query getAdminDashboard {
 		getAdminDashboard {
@@ -1110,6 +1223,9 @@ export const getAdminDashboard = gql`
 			pendingOrders
 			revenue
 			topProducts {
+				saleStart
+				saleEnd
+				productInstructions
 				_id
 				productName
 				productDesc
@@ -1126,6 +1242,9 @@ export const getAdminDashboard = gql`
 				productSellerId
 				productStatus
 				productVariants {
+					ageMinMonths
+					ageMaxMonths
+					images
 					_id
 					color
 					size
@@ -1234,7 +1353,6 @@ export const getAdminDashboard = gql`
 		}
 	}
 `;
-
 export const getSellerDashboard = gql`
 	query getSellerDashboard {
 		getSellerDashboard {
@@ -1248,19 +1366,16 @@ export const getSellerDashboard = gql`
 		}
 	}
 `;
-
 export const checkAuth = gql`
 	query checkAuth {
 		checkAuth
 	}
 `;
-
 export const checkAuthRoles = gql`
 	query checkAuthRoles {
 		checkAuthRoles
 	}
 `;
-
 export const getMember = gql`
 	query getMember($memberId: String!) {
 		getMember(memberId: $memberId) {
@@ -1304,7 +1419,6 @@ export const getMember = gql`
 		}
 	}
 `;
-
 export const getMe = gql`
 	query getMe {
 		getMe {
@@ -1348,7 +1462,6 @@ export const getMe = gql`
 		}
 	}
 `;
-
 export const getSellers = gql`
 	query getSellers($input: SellersInquiry!) {
 		getSellers(input: $input) {
@@ -1397,7 +1510,6 @@ export const getSellers = gql`
 		}
 	}
 `;
-
 export const getSeller = gql`
 	query getSeller($sellerId: String!) {
 		getSeller(sellerId: $sellerId) {
@@ -1441,7 +1553,6 @@ export const getSeller = gql`
 		}
 	}
 `;
-
 export const getAllMemberByAdmin = gql`
 	query getAllMemberByAdmin($input: MembersInquiry!) {
 		getAllMemberByAdmin(input: $input) {
@@ -1490,7 +1601,6 @@ export const getAllMemberByAdmin = gql`
 		}
 	}
 `;
-
 export const getSellerCodes = gql`
 	query getSellerCodes($input: PageInquiry!) {
 		getSellerCodes(input: $input) {
@@ -1511,7 +1621,6 @@ export const getSellerCodes = gql`
 		}
 	}
 `;
-
 export const getBrand = gql`
 	query getBrand($id: String!) {
 		getBrand(id: $id) {
@@ -1525,7 +1634,6 @@ export const getBrand = gql`
 		}
 	}
 `;
-
 export const getBrands = gql`
 	query getBrands($input: PageInquiry!, $text: String) {
 		getBrands(input: $input, text: $text) {
@@ -1544,7 +1652,6 @@ export const getBrands = gql`
 		}
 	}
 `;
-
 export const getBrandsByAdmin = gql`
 	query getBrandsByAdmin($input: PageInquiry!) {
 		getBrandsByAdmin(input: $input) {
@@ -1563,7 +1670,6 @@ export const getBrandsByAdmin = gql`
 		}
 	}
 `;
-
 export const getMyNotifications = gql`
 	query getMyNotifications($input: NotificationsInquiry!) {
 		getMyNotifications(input: $input) {
@@ -1585,13 +1691,11 @@ export const getMyNotifications = gql`
 		}
 	}
 `;
-
 export const getUnreadNotificationCount = gql`
 	query getUnreadNotificationCount {
 		getUnreadNotificationCount
 	}
 `;
-
 export const getBoardArticle = gql`
 	query getBoardArticle($articleId: String!) {
 		getBoardArticle(articleId: $articleId) {
@@ -1654,7 +1758,6 @@ export const getBoardArticle = gql`
 		}
 	}
 `;
-
 export const getBoardArticles = gql`
 	query getBoardArticles($input: BoardArticlesInquiry!) {
 		getBoardArticles(input: $input) {
@@ -1722,7 +1825,6 @@ export const getBoardArticles = gql`
 		}
 	}
 `;
-
 export const getAllBoardArticlesByAdmin = gql`
 	query getAllBoardArticlesByAdmin($input: AllBoardArticlesInquiry!) {
 		getAllBoardArticlesByAdmin(input: $input) {
@@ -1790,7 +1892,6 @@ export const getAllBoardArticlesByAdmin = gql`
 		}
 	}
 `;
-
 export const getComments = gql`
 	query getComments($input: CommentsInquiry!) {
 		getComments(input: $input) {
@@ -1798,7 +1899,11 @@ export const getComments = gql`
 				_id
 				commentStatus
 				commentGroup
-				commentContent
+				likeCount
+                verifiedPurchase
+                replyText
+                replyAuthorId
+                commentContent
 				commentRefId
 				memberId
 				createdAt
@@ -1849,7 +1954,6 @@ export const getComments = gql`
 		}
 	}
 `;
-
 export const getMemberFollowings = gql`
 	query getMemberFollowings($input: FollowInquiry!) {
 		getMemberFollowings(input: $input) {
@@ -1915,7 +2019,6 @@ export const getMemberFollowings = gql`
 		}
 	}
 `;
-
 export const getMemberFollowers = gql`
 	query getMemberFollowers($input: FollowInquiry!) {
 		getMemberFollowers(input: $input) {
@@ -1981,7 +2084,6 @@ export const getMemberFollowers = gql`
 		}
 	}
 `;
-
 export const getMyFollowings = gql`
 	query getMyFollowings($input: PageInquiry!) {
 		getMyFollowings(input: $input) {
@@ -2047,7 +2149,6 @@ export const getMyFollowings = gql`
 		}
 	}
 `;
-
 export const getSellerFollowers = gql`
 	query getSellerFollowers($sellerId: String!, $input: PageInquiry!) {
 		getSellerFollowers(sellerId: $sellerId, input: $input) {
@@ -2113,13 +2214,13 @@ export const getSellerFollowers = gql`
 		}
 	}
 `;
-
 export const queryOperations = {
 	sayHello,
 	getCoupons,
 	validateCoupon,
 	getMyCart,
 	getProducts,
+	getTodayRecommendations,
 	getProduct,
 	getRelatedProducts,
 	getAllProductsByAdmin,
@@ -2136,6 +2237,7 @@ export const queryOperations = {
 	getPaymentsByAdmin,
 	getDelivery,
 	getDeliveries,
+	getSellerTopReviews,
 	getReviews,
 	getReviewsByAdmin,
 	getMyMessages,
@@ -2172,4 +2274,4 @@ export const queryOperations = {
 	getMemberFollowers,
 	getMyFollowings,
 	getSellerFollowers,
-};
+} as const;

@@ -1,3 +1,6 @@
+import { useTranslation } from 'next-i18next';
+import CalendarMonthOutlined from '@mui/icons-material/CalendarMonthOutlined';
+import styles from '../../libs/components/common/MarketplaceRedesign.module.scss';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,6 +12,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	props: { ...(await serverSideTranslations(locale, ['common'])) },
 });
 function Events() {
+ const { t } = useTranslation('common');
 	const router = useRouter(),
 		id = String(router.query.id || ''),
 		[page, setPage] = useState(1),
@@ -19,18 +23,17 @@ function Events() {
 			<State query={detail}>
 				{detail.value && (
 					<>
-						<PageTitle title={detail.value.title} subtitle={detail.value.eventType.replace(/_/g, ' ')} />
-						<Photo
-							src={detail.value.images?.[0]}
-							alt={detail.value.title}
-							style={{ maxHeight: 500, width: '100%', borderRadius: 18 }}
-						/>
-						<p>
-							{new Date(detail.value.startAt).toLocaleDateString()} —{' '}
-							{new Date(detail.value.endAt).toLocaleDateString()}
-						</p>
-						<p style={{ whiteSpace: 'pre-wrap' }}>{detail.value.description}</p>
-						<Link href="/events">All Events →</Link>
+                        <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/">{t('HOME')}</Link><span>/</span><Link href="/events">{t('redesign.events')}</Link><span>/</span><span>{detail.value.title}</span></nav>
+                        <article className={styles.eventCard}>
+                          <Photo src={detail.value.images?.[0]} alt={detail.value.title} />
+                          <div>
+                            <span className={styles.eventType}>{detail.value.eventType.replace(/_/g, ' ')}</span>
+                            <h1>{detail.value.title}</h1>
+                            <p className={styles.eventDate}><CalendarMonthOutlined />{new Date(detail.value.startAt).toLocaleDateString(router.locale)} — {new Date(detail.value.endAt).toLocaleDateString(router.locale)}</p>
+                            <p>{detail.value.description}</p>
+                            <Link href="/events">{t('redesign.allEvents')} →</Link>
+                          </div>
+                        </article>
 					</>
 				)}
 			</State>
@@ -42,7 +45,7 @@ function Events() {
 				<div className="editorial-grid">
 					{q.value?.list?.map((e: any) => (
 						<Link key={e._id} className="editorial-card" href={{ pathname: '/events', query: { id: e._id } }}>
-							<Photo src={e.images?.[0]} alt={e.title} />
+							<Photo src={e.images?.[0]} alt={e.title} style={{ objectFit: "contain" }} />
 							<div>
 								<h3>{e.title}</h3>
 								<p>{e.description}</p>

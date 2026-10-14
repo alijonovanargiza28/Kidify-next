@@ -1,3 +1,4 @@
+import { ageRange } from './productVariants';
 import { backendEnums } from '../types/marketplace';
 
 // The backend stores an optional string per variant; these are UI choices, not a new enum.
@@ -44,6 +45,11 @@ export function validateProductInput(input: any, imageCount: number, creating: b
 		(!Number.isInteger(input.productDiscount) || input.productDiscount < 0 || input.productDiscount > 100)
 	)
 		throw new Error('Discount must be a whole number between 0 and 100.');
+	if (
+		Boolean(input.saleStart) !== Boolean(input.saleEnd) ||
+		(input.saleStart && +new Date(input.saleStart) >= +new Date(input.saleEnd))
+	)
+		throw new Error('Choose both sale dates, with the end after the start.');
 	const variants = input.productVariants;
 	if (!Array.isArray(variants) || variants.length < 1 || variants.length > 100)
 		throw new Error('Add between 1 and 100 variants.');
@@ -54,10 +60,35 @@ export function validateProductInput(input: any, imageCount: number, creating: b
 		for (const field of ['color', 'size', 'sku'])
 			if (variant[field] != null && (typeof variant[field] !== 'string' || variant[field].length > 80))
 				throw new Error('Color, size and SKU must be 80 characters or fewer.');
-		const key = JSON.stringify([variant.color ?? '', variant.size ?? '']);
+		const range = ageRange(variant);
+		if (
+			(variant.ageMinMonths == null) !== (variant.ageMaxMonths == null) ||
+			(range && (!range.every(Number.isInteger) || range[0] < 0 || range[1] > 240 || range[0] > range[1]))
+		)
+			throw new Error('Enter a valid month interval between 0 and 240.');
+		const key = JSON.stringify([
+			(variant.color ?? '').toLowerCase(),
+			variant.ageMinMonths ?? variant.size ?? '',
+			variant.ageMaxMonths ?? '',
+		]);
 		if (seen.has(key)) throw new Error('Each color and size combination must be unique.');
 		seen.add(key);
 	}
+	for (let i = 0; i < variants.length; i++)
+		for (let j = 0; j < i; j++) {
+			const a = variants[i],
+				b = variants[j],
+				ar = ageRange(a),
+				br = ageRange(b);
+			if (
+				(a.color || '').toLowerCase() === (b.color || '').toLowerCase() &&
+				ar &&
+				br &&
+				ar[0] <= br[1] &&
+				br[0] <= ar[1]
+			)
+				throw new Error('Month intervals for the same color must not overlap.');
+		}
 	if (creating && !variants.some((variant: any) => variant.stock > 0))
 		throw new Error('At least one variant must have stock greater than zero.');
 }

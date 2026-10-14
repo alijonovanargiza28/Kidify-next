@@ -1,4 +1,11 @@
+import styles from '../../libs/components/common/MarketplaceRedesign.module.scss';
+import { Inventory2Outlined, FavoriteBorder, VisibilityOutlined, PeopleOutline, StarOutline, ChatBubbleOutline } from '@mui/icons-material';
+import { useTranslation } from 'next-i18next';
+import useUiText from '../../libs/hooks/useUiText';
+import FollowButton from '../../libs/components/seller/FollowButton';
+import ReviewCard from '../../libs/components/common/ReviewCard';
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { Button } from '@mui/material';
@@ -15,6 +22,10 @@ export const getStaticProps = async ({ locale }: any) => ({
 	props: { ...(await serverSideTranslations(locale, ['common'])) },
 });
 export function Seller({ member = false }: any) {
+ const uiText = useUiText();
+ const { t } = useTranslation('common');
+ const tr = (key: string) => t(`redesign.${key}`);
+
 	const router = useRouter(),
 		id = String(router.query.id || router.query.agentId || router.query.memberId || ''),
 		user = useReactiveVar(userVar),
@@ -29,11 +40,7 @@ export function Seller({ member = false }: any) {
 			!id || member,
 		),
 		s = q.value;
-	const reviews = useMarketplace(
-		'getReviews',
-		{ group: 'SELLER', targetId: id, input: { page: 1, limit: 3 } },
-		!id || member,
-	);
+	const reviews = useMarketplace('getSellerTopReviews', { sellerId: id }, !id || member);
 	const change = (key: string, value: string | number) =>
 		router.push(
 			{
@@ -47,51 +54,49 @@ export function Seller({ member = false }: any) {
 		<State query={q}>
 			{s && (
 				<>
-					<PageTitle title={s.memberNick} />
-					<section className="boutique-hero">
+					{member ? <PageTitle title={s.memberNick} /> : <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/">{uiText("Home")}</Link><span>/</span><Link href="/sellers">{uiText("Our Sellers")}</Link><span>/</span><span>{s.memberNick}</span></nav>}
+					{member ? (<section className="boutique-hero">
 						<Photo src={s.memberImage} alt={s.memberNick} />
 						<div>
 							<p className="eyebrow">{member ? 'Community member' : 'The Boutique'}</p>
 							<h1>{s.memberNick}</h1>
 							<p>{s.memberDesc}</p>
 							<p>
-								{s.memberFollowers} followers · {s.averageRating} / 5<br />
-								{s.memberProducts} products · {s.memberLikes} likes · {s.memberViews} views
-							</p>
+								{s.memberFollowers} {uiText("followers ·")}{s.averageRating} / 5<br />
+								{s.memberProducts} {uiText("products ·")}{s.memberLikes} {uiText("likes ·")}{s.memberViews} {uiText("views")}</p>
 							{user._id !== id && (
 								<>
-									<Button
-										variant="contained"
-										onClick={() =>
-											user._id
-												? void action(s.meFollowed?.length ? 'unsubscribe' : 'subscribe', { input: id }).catch(() => {})
-												: router.push('/account/join')
-										}
-									>
-										{s.meFollowed?.length ? 'Unfollow' : member ? 'Follow' : 'Follow Boutique'}
-									</Button>
+<FollowButton seller={s} contained />
 									<Button onClick={() => router.push({ pathname: '/messages', query: { peerId: id } })}>
 										{member ? 'Send message' : 'Contact Seller'}
 									</Button>
 								</>
 							)}
 						</div>
-					</section>
+					</section>) : (<section className={styles.boutique}>
+ <div className={styles.boutiqueIdentity}><Photo src={s.memberImage} alt={s.memberNick} /><div>
+ <p className="eyebrow">{tr('The Boutique')}</p><h1>{s.memberNick}</h1><p>{s.memberDesc}</p>
+ <div className={styles.boutiqueSocial}><span><PeopleOutline />{s.memberFollowers} {uiText('followers')}</span><span><StarOutline />{Number(s.averageRating || 0).toFixed(1)} / 5</span></div>
+ </div></div>
+ <div className={styles.boutiqueStats}>
+ {[[Inventory2Outlined, s.memberProducts, 'products'], [FavoriteBorder, s.memberLikes, 'Likes'], [VisibilityOutlined, s.memberViews, 'Views']].map(([Icon, value, label]: any) => <div key={label}><Icon /><strong>{value ?? 0}</strong><span>{uiText(label)}</span></div>)}
+ </div>
+ {user._id !== id && <div className={styles.boutiqueActions}><FollowButton seller={s} contained /><Button variant="outlined" startIcon={<ChatBubbleOutline />} onClick={() => router.push({ pathname: '/messages', query: { peerId: id } })}>{tr('Contact Seller')}</Button></div>}
+ </section>)}
 					{!member && (
 						<section className="home-section">
 							<div className="section-heading">
-								<h2>Shop the Collection</h2>
-								<span>{products.value?.metaCounter?.[0]?.total || 0} products</span>
+								<h2>{uiText("Shop the Collection")}</h2>
+								<span>{products.value?.metaCounter?.[0]?.total || 0} {uiText("products")}</span>
 							</div>
 							<div className="result-toolbar">
 								<FilterInput
-									label="Search this boutique"
+									label={uiText("Search this boutique")}
 									value={text}
 									onChange={(value: string) => change('text', value)}
 								/>
 								<label className="sort-label">
-									Sort
-									<select value={sort} onChange={(e) => change('sort', e.target.value)}>
+									{uiText("Sort")}<select value={sort} onChange={(e) => change('sort', e.target.value)}>
 										{backendEnums.ProductSort.map((value) => (
 											<option key={value} value={value}>
 												{value.replace(/_/g, ' ')}
@@ -112,17 +117,13 @@ export function Seller({ member = false }: any) {
 					)}
 					{!member && (
 						<section className="boutique-reviews">
-							<p className="eyebrow">Boutique Guestbook</p>
-							<h2>What Families Say About {s.memberNick}</h2>
-							<p>Recent verified purchase reviews</p>
+							<p className="eyebrow">{uiText("Boutique Guestbook")}</p>
+							<h2>{uiText("What Families Say About")}{s.memberNick}</h2>
+							<p>{uiText("Top liked verified product reviews")}</p>
 							<State query={reviews} empty={reviews.value?.list?.length === 0}>
 								<div className="editorial-grid">
 									{reviews.value?.list?.slice(0, 3).map((review: any) => (
-										<article className="panel" key={review._id}>
-											<strong>★ {review.rating} / 5</strong>
-											<p>{review.text}</p>
-											<small>Verified purchase · {new Date(review.createdAt).toLocaleDateString()}</small>
-										</article>
+										<ReviewCard key={review._id} review={review} sellerId={id} />
 									))}
 								</div>
 							</State>

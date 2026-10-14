@@ -1,3 +1,6 @@
+import { ShoppingCartOutlined, LocalShippingOutlined, Inventory2Outlined, CheckCircleOutline, KeyboardArrowDown } from '@mui/icons-material';
+import { SettlementNote } from '../common/Currency';
+import useUiText from '../../hooks/useUiText';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -6,6 +9,8 @@ import { useMarketplace, useAction } from '../../hooks/useMarketplace';
 import { State, Pager, Photo, money } from '../common/Marketplace';
 import MarketplaceForm from '../common/MarketplaceForm';
 export default function Orders({ role = 'USER' }: any) {
+ const uiText = useUiText();
+
 	const [page, setPage] = useState(1),
 		[status, setStatus] = useState(''),
 		[review, setReview] = useState<any>(null);
@@ -50,13 +55,12 @@ export default function Orders({ role = 'USER' }: any) {
 						})
 					}
 				>
-					All orders
-				</Button>
+					{uiText("All orders")}</Button>
 			)}
 			<TextField InputLabelProps={{htmlFor:undefined}}
 				disabled={!!orderId}
 				select
-				label="Status"
+				label={uiText("Status")}
 				value={status}
 				fullWidth
 				onChange={(e) => {
@@ -64,7 +68,7 @@ export default function Orders({ role = 'USER' }: any) {
 					setPage(1);
 				}}
 			>
-				<MenuItem value="">All orders</MenuItem>
+				<MenuItem value="">{uiText("All orders")}</MenuItem>
 				{[
 					'PENDING',
 					'CONFIRMED',
@@ -82,13 +86,14 @@ export default function Orders({ role = 'USER' }: any) {
 			</TextField>
 			<State query={q} empty={q.value?.list?.length === 0}>
 				{q.value?.list?.map((o: any) => (
-					<section className="panel" key={o._id}>
+					<section className="panel reference-order" key={o._id}>
 						<div className="section-heading">
 							<div>
-								<h3>Order {o._id.slice(-8)}</h3>
+								<h3>{uiText("Order")} #{o._id.slice(-8)}</h3>
 								<small>{new Date(o.createdAt).toLocaleString()}</small>
 							</div>
-							<span>
+							<div className="order-progress">{[ShoppingCartOutlined,Inventory2Outlined,LocalShippingOutlined].map((Icon,i)=><span key={i} className={i===0 || (i===1 && ['SHIPPED','DELIVERED'].includes(o.status)) || (i===2 && o.status==='DELIVERED') ? 'done' : ''}><Icon/><small>{[uiText('Order Placed'),uiText('Shipped'),uiText('Delivered')][i]}</small></span>)}</div>
+                            <span className="order-status-badge">
 								{o.status.replace(/_/g, ' ')} · {o.paymentStatus}
 							</span>
 						</div>
@@ -105,27 +110,25 @@ export default function Orders({ role = 'USER' }: any) {
 										{[i.color, i.size].filter(Boolean).join(' / ')} · {i.quantity} × {money(i.finalUnitPrice)}
 									</p>
 									<small>{i.status.replace(/_/g, ' ')}</small>
-									{role === 'SELLER' && o.paymentStatus === 'PAID' && ['CONFIRMED', 'PREPARING'].includes(i.status) && (
+									{role === 'SELLER' && o.paymentStatus === 'PAID' && ['CONFIRMED', 'PREPARING', 'READY_FOR_DELIVERY', 'SHIPPED'].includes(i.status) && (
 										<Button
 											onClick={() =>
 												void action('updateSellerOrderItemStatus', {
 													orderId: o._id,
 													itemId: i._id,
-													status: i.status === 'CONFIRMED' ? 'PREPARING' : 'READY_FOR_DELIVERY',
+													status: ({ CONFIRMED: 'PREPARING', PREPARING: 'READY_FOR_DELIVERY', READY_FOR_DELIVERY: 'SHIPPED', SHIPPED: 'DELIVERED' } as Record<string,string>)[i.status],
 												}).catch(() => {})
 											}
 										>
-											{i.status === 'CONFIRMED' ? 'Start preparing' : 'Ready for delivery'}
+											{({ CONFIRMED: 'Start preparing', PREPARING: 'Ready for delivery', READY_FOR_DELIVERY: 'Mark shipped', SHIPPED: 'Mark delivered' } as Record<string,string>)[i.status]}
 										</Button>
 									)}
-									{role === 'USER' && o.status === 'DELIVERED' && o.paymentStatus === 'PAID' && (
+									{role === 'USER' && o.status === 'DELIVERED' && i.status === 'DELIVERED' && o.paymentStatus === 'PAID' && (
 										<>
 											<Button onClick={() => setReview({ orderId: o._id, targetId: i.productId, group: 'PRODUCT' })}>
-												Review product
-											</Button>
+												{uiText("Review product")}</Button>
 											<Button onClick={() => setReview({ orderId: o._id, targetId: i.sellerId, group: 'SELLER' })}>
-												Review seller
-											</Button>
+												{uiText("Review seller")}</Button>
 										</>
 									)}
 								</div>
@@ -134,16 +137,17 @@ export default function Orders({ role = 'USER' }: any) {
 						))}
 						{o.total != null && (
 							<div className="summary-line total">
-								<span>Total</span>
-								<strong>{money(o.total)}</strong>
+								<span>{uiText("Total")}</span>
+								<strong>{money(o.total)}</strong><SettlementNote />
 							</div>
 						)}
 						{o.shippingAddress && (
 							<p>
-								Deliver to {o.shippingAddress.recipientName}, {o.shippingAddress.street}, {o.shippingAddress.city}
+								{uiText("Deliver to")}{o.shippingAddress.recipientName}, {o.shippingAddress.street}, {o.shippingAddress.city}
 							</p>
 						)}
 						<div className="row-actions">
+                            {!orderId && <Button onClick={()=>router.push({pathname:'/mypage',query:{category:role==='SELLER'?'sellerOrders':role==='ADMIN'?'adminOrders':'orders',orderId:o._id}})}>{uiText('View Details')}</Button>}
 							{role === 'USER' && (
 								<>
 									{o.status === 'PENDING' && ['PENDING', 'FAILED'].includes(o.paymentStatus) && (
@@ -151,24 +155,21 @@ export default function Orders({ role = 'USER' }: any) {
 											variant="contained"
 											onClick={() => void action('payOrderDemo', { paymentId: o.paymentId }).catch(() => {})}
 										>
-											Pay — Demo
-										</Button>
+											{uiText("Pay — Demo")}</Button>
 									)}
 									{['PENDING', 'CONFIRMED'].includes(o.status) &&
 										o.items.every((i: any) => ['PENDING', 'CONFIRMED'].includes(i.status)) && (
 											<Button onClick={() => void action('cancelOrder', { orderId: o._id }).catch(() => {})}>
-												Cancel order
-											</Button>
+												{uiText("Cancel order")}</Button>
 										)}
-									<Button onClick={() => void action('buyAgain', { orderId: o._id }).catch(() => {})}>Buy again</Button>
+									<Button onClick={() => void action('buyAgain', { orderId: o._id }).catch(() => {})}>{uiText("Buy again")}</Button>
 								</>
 							)}
 							{role === 'ADMIN' && (
 								<>
 									{['PENDING', 'CONFIRMED', 'PREPARING', 'READY_FOR_DELIVERY'].includes(o.status) && (
 										<Button onClick={() => void action('cancelOrder', { orderId: o._id }).catch(() => {})}>
-											Cancel
-										</Button>
+											{uiText("Cancel")}</Button>
 									)}
 									{o.status === 'DELIVERED' && o.paymentStatus === 'PAID' && (
 										<Button
@@ -176,15 +177,13 @@ export default function Orders({ role = 'USER' }: any) {
 												void action('updateOrderStatusByAdmin', { orderId: o._id, status: 'REFUNDED' }).catch(() => {})
 											}
 										>
-											Refund — Demo
-										</Button>
+											{uiText("Refund — Demo")}</Button>
 									)}
 								</>
 							)}
-							{o.deliveryId && (
+							{role !== 'SELLER' && o.deliveryId && (
 								<Link href={{ pathname: '/mypage', query: { category: 'delivery', id: o.deliveryId } }}>
-									Delivery details →
-								</Link>
+									{uiText("Delivery details →")}</Link>
 							)}
 						</div>
 					</section>
@@ -197,13 +196,14 @@ export default function Orders({ role = 'USER' }: any) {
 						key={review.targetId}
 						type="ReviewInput"
 						initial={review}
-						fields={['rating', 'text']}
+						fields={['rating', 'text', 'images']}
+                        uploadTarget="review"
 						onSubmit={async (input: any) => {
 							await action('createReview', { input: { ...input, ...review } });
 							setReview(null);
 						}}
 					/>
-					<Button onClick={() => setReview(null)}>Close review</Button>
+					<Button onClick={() => setReview(null)}>{uiText("Close review")}</Button>
 				</>
 			)}
 		</>

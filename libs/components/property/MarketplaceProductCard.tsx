@@ -1,51 +1,114 @@
-import React, { useState } from 'react';
+import { sweetMixinSuccessAlert } from '../../sweetAlert';
+import { useProductFavorite } from '../../hooks/useProductFavorite';
+import useUiText from '../../hooks/useUiText';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import { userVar } from '../../../apollo/store';
 import { useAction } from '../../hooks/useMarketplace';
 import { Photo, money } from '../common/Marketplace';
+import { colorImages, ageRange, configuredAgeOptions } from '../../utils/productVariants';
 import { colorPaint } from '../common/ColorSelector';
-export default function ProductCard({ product: p }: any) {
-	const action = useAction(),
+export default function ProductCard({ product: p, selectedColor }: any) {
+ const uiText = useUiText();
+
+	const purchaseLock=useRef(false);
+ const action = useAction(),
 		router = useRouter(),
 		user = useReactiveVar(userVar),
 		[busy, setBusy] = useState(false);
-	const target = { pathname: '/products/detail', query: { id: p._id } };
+	const favorite = useProductFavorite(p, user._id);
+	const [color, setColor] = useState(selectedColor || ''),
+		[quantity, setQuantity] = useState(1),
+		[option, setOption] = useState(''),
+		[added, setAdded] = useState(false),
+		[optionsOpen, setOptionsOpen] = useState(false);
+	const variants = p.productVariants || [];
+	const choices = configuredAgeOptions(variants, color || undefined);
+	const chosen = choices.find((v: any) => v.key === option) || (choices.length === 1 ? choices[0] : undefined);
+	useEffect(() => {
+		setColor(selectedColor || '');
+		setOption('');
+		setAdded(false);
+	}, [selectedColor, p._id]);
+	const images = colorImages(p, color);
+	const target = { pathname: '/products/detail', query: { id: p._id, ...(color ? { color } : {}) } };
 	const colors = Array.from(new Set<string>((p.productVariants || []).map((v: any) => v.color).filter(Boolean)));
+	const addToCart = async () => {
+		if (!optionsOpen) {
+            setColor(color || variants.find((v:any)=>v.stock>0)?.color || '');
+			setOptionsOpen(true);
+			return;
+		}
+		if (purchaseLock.current || !chosen || quantity > chosen.variant.stock || busy) return;
+        if (!user._id) {
+			router.push({ pathname: '/account/join', query: { returnTo: router.asPath } });
+			return;
+		}
+		purchaseLock.current=true;setBusy(true);
+		try {
+			await action('addToCart', {
+				input: {
+					productId: p._id,
+					variantId: chosen.variant._id,
+					quantity,
+					...(chosen.month != null ? { ageMonth: chosen.month } : {}),
+				},
+			});
+			setAdded(false);
+            setQuantity(1);
+			setOptionsOpen(false);
+            void sweetMixinSuccessAlert(uiText('Added to your bag.'));
+		} catch {
+		} finally {
+            purchaseLock.current=false;
+			setBusy(false);
+		}
+	};
 	return (
 		<article className="kidify-product">
-			<Link href={target} className="product-photo">
-				<Photo src={p.productImages?.[0]} alt={p.productName} />
-				<span className="product-badges">
-					{p.badges?.map((b: string) => (
-						<span key={b}>{b.replace(/_/g, ' ')}</span>
-					))}
-				</span>
-			</Link>
+			<div className="product-photo">
+				<Link href={target} className="product-image-link">
+					<Photo src={images[0]} alt={p.productName} />
+					<span className="product-badges">
+						{p.badges?.map((b: string) => (
+							<span key={b}>{b.replace(/_/g, ' ')}</span>
+						))}
+					</span>
+				</Link>
+				<Button
+					className="card-cart-overlay"
+					variant="contained"
+					disabled={busy || p.productStatus !== 'ACTIVE' || !variants.some((v: any) => v.stock > 0)}
+					onClick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						void addToCart();
+					}}
+				>
+					{added ? 'Added to Cart' : 'Add to Cart'}
+				</Button>
+			</div>
 			<IconButton
 				className="favorite"
-				aria-label={`${p.meLiked?.length ? 'Remove from' : 'Add to'} wishlist: ${p.productName}`}
-				aria-pressed={Boolean(p.meLiked?.length)}
-				disabled={busy}
-				onClick={async () => {
+                sx={{ color: '#90495F' }}
+				aria-label={`${favorite.liked ? 'Remove from' : 'Add to'} wishlist: ${p.productName}`}
+				aria-pressed={favorite.liked}
+				disabled={busy || favorite.busy}
+				onClick={async (e) => {
+					e.stopPropagation();
 					if (!user._id) {
 						router.push({ pathname: '/account/join', query: { returnTo: router.asPath } });
 						return;
 					}
-					setBusy(true);
-					try {
-						await action('favoriteProduct', { productId: p._id });
-					} catch {
-					} finally {
-						setBusy(false);
-					}
+					await favorite.toggle();
 				}}
 			>
-				{p.meLiked?.length ? <Favorite /> : <FavoriteBorder />}
+				{favorite.liked ? <Favorite /> : <FavoriteBorder />}
 			</IconButton>
 			<div className="product-copy">
 				<p className="eyebrow">{p.productCollection?.replace(/_/g, ' ') || p.productType?.replace(/_/g, ' ')}</p>
@@ -54,22 +117,47 @@ export default function ProductCard({ product: p }: any) {
 				</Link>
 				<div className="product-rating">
 					<span aria-label={`${p.averageRating || 0} out of 5`}>★ {Number(p.averageRating || 0).toFixed(1)}</span>
-					<span>({p.productReviews || 0} reviews)</span>
+					<span>({p.productReviews || 0} {uiText("reviews)")}</span>
 				</div>
 				<div className="card-price-row">
 					<div className="price">
 						{money(p.finalPrice)} {p.productOldPrice != null && <del>{money(p.productOldPrice)}</del>}
 					</div>
-					<div className="card-colors" aria-label="Available colors">
-						{colors.slice(0, 5).map((color) => (
-							<span key={color} title={color} aria-label={color} style={{ backgroundColor: colorPaint(color) }} />
+					<div className="card-colors" aria-label={uiText("Available colors")}>
+						{colors.slice(0, 5).map((swatch) => (
+							<button
+								type="button"
+								key={swatch}
+								title={swatch}
+								aria-label={`Show ${swatch}`}
+								aria-pressed={color === swatch}
+								onClick={(e) => {
+									e.stopPropagation();
+									setColor(swatch);
+									setOption('');
+									setAdded(false);
+								}}
+								style={{ backgroundColor: colorPaint(swatch) }}
+							/>
 						))}
 						{colors.length > 5 && <small>+{colors.length - 5}</small>}
 					</div>
 				</div>
-				<Button variant="outlined" fullWidth onClick={() => router.push(target)}>
-					View product →
-				</Button>
+				<Dialog open={optionsOpen} onClose={() => setOptionsOpen(false)} fullWidth maxWidth="xs">
+					<DialogTitle>{uiText("Choose options")}</DialogTitle>
+                    <DialogContent className="product-option-dialog">
+                      <p>{p.productName}</p><h4>{uiText('Color')}</h4>
+                      <div className="option-colors">{colors.map(c => <button key={c} type="button" aria-pressed={c===color} onClick={()=>{setColor(c);setOption('');setQuantity(1);}}><Photo src={colorImages(p,c)[0]} alt={c} /><span>{c}</span></button>)}</div>
+                      <h4>{uiText('Size / month')}</h4>
+                      <div className="option-ages">{choices.map(c => <button type="button" key={c.key} disabled={c.variant.stock<1} aria-pressed={chosen?.key===c.key} onClick={()=>{setOption(c.key);setQuantity(1);}}>{c.label.replace('months',uiText('months'))}</button>)}</div>
+                      <div className="option-quantity"><span>{uiText('Quantity')}</span><Button disabled={quantity<=1} onClick={()=>setQuantity(quantity-1)}>−</Button><strong>{quantity}</strong><Button disabled={!chosen || quantity>=chosen.variant.stock} onClick={()=>setQuantity(quantity+1)}>+</Button></div>
+                    </DialogContent>
+					<DialogActions>
+						<Button onClick={() => setOptionsOpen(false)}>{uiText("Cancel")}</Button>
+						<Button variant="contained" disabled={busy || !chosen || chosen.variant.stock < quantity} onClick={addToCart}>
+							{uiText("Add to Cart")}</Button>
+					</DialogActions>
+				</Dialog>
 			</div>
 		</article>
 	);

@@ -1,0 +1,38 @@
+:global(#pc-wrap.kidify) .summary {
+ background: #fffdfd;
+ border: 1px solid #f3cfdb;
+ border-radius: 22px;
+ padding: 24px;
+ box-shadow: 0 6px 24px #b55a7609;
+ min-width: 0;
+ .header { padding-bottom: 18px; margin-bottom: 16px; border-bottom: 1px solid #f5dce5; }
+ h2 { font-family: 'EB Garamond', Georgia, serif; font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+ .header p { margin: 0; color: #75828e; line-height: 1.5; }
+ .header small { font-size: 12px; }
+ :global(.summary-line) { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0; padding: 6px 0; font-size: 13px; }
+ :global(.summary-line) strong { font-weight: 500; white-space: nowrap; }
+ :global(.summary-line) small { font-size: 11px; color: #75828e; }
+ :global(.summary-line) > small { text-align: right; max-width: 45%; }
+ .total { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 16px 0 22px; padding: 13px 14px; border-radius: 14px; background: #fceef3; color: #ab3f67; font-size: 19px; font-weight: 600; }
+ .total strong { margin-left: auto; font-size: 21px; white-space: nowrap; }
+ .field { display: grid; gap: 7px; margin-top: 16px; }
+ .field > label { font-size: 13px; font-weight: 500; }
+ :global(.MuiOutlinedInput-root) { background: #fff; border-radius: 11px; font-size: 12px; min-height: 42px; }
+ :global(.MuiOutlinedInput-notchedOutline) { border-color: #e9c8d5; }
+ :global(.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline) { border-color: #d899af; }
+ :global(.MuiInputBase-input) { padding: 11px 12px; }
+ :global(.MuiInputAdornment-root) { color: #dc93ae; }
+ .hint { margin: 8px 0 0; line-height: 1.5; color: #75828e; }
+ .hint small { font-size: 11px; }
+ .addressRow { display: flex; gap: 8px; align-items: stretch; }
+ .addressRow :global(.MuiTextField-root) { flex: 1; min-width: 0; }
+ .addressRow :global(.MuiButton-root) { flex-shrink: 0; min-width: 0; padding: 7px 10px; border: 1px solid #da97ae; background: #fff5f8; color: #ab3f67; border-radius: 11px; text-transform: none; font-size: 11px; white-space: nowrap; }
+ .addressRow :global(.MuiButton-root:hover) { background: #fce8f0; border-color: #ad5a78; }
+ .placeOrder { min-height: 46px; margin-top: 20px; border-radius: 12px; background: #af607a; color: #fff; font-size: 15px; font-weight: 600; text-transform: none; box-shadow: none; }
+ .placeOrder:hover { background: #994c65; box-shadow: none; }
+ .placeOrder:global(.Mui-disabled) { background: #ead5dd; color: #8b737d; }
+ .demoNote { display: flex; align-items: flex-start; gap: 8px; margin: 16px 0 0; color: #75828e; line-height: 1.5; }
+ .demoNote svg { font-size: 19px; flex-shrink: 0; color: #a995a4; }
+ .demoNote small { font-size: 11px; }
+ @media (max-width: 450px) { padding: 20px; .addressRow { flex-wrap: wrap; } .addressRow :global(.MuiTextField-root) { flex-basis: 100%; } .addressRow :global(.MuiButton-root) { min-height: 36px; } }
+}

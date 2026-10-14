@@ -36,6 +36,10 @@ export const inputTypes = {
 		},
 	},
 	ProductSearch: {
+ ageFromMonths:{type:"Int"},ageToMonths:{type:"Int"},
+		ageMonth: {
+			type: 'Int',
+		},
 		saleOnly: {
 			type: 'Boolean',
 		},
@@ -285,6 +289,9 @@ export const inputTypes = {
 		},
 	},
 	CartItemInput: {
+		ageMonth: {
+			type: 'Int',
+		},
 		productId: {
 			type: 'String!',
 		},
@@ -296,6 +303,15 @@ export const inputTypes = {
 		},
 	},
 	ProductInput: {
+		saleStart: {
+			type: 'DateTime',
+		},
+		saleEnd: {
+			type: 'DateTime',
+		},
+		productInstructions: {
+			type: 'String',
+		},
 		productName: {
 			type: 'String!',
 		},
@@ -337,6 +353,15 @@ export const inputTypes = {
 		},
 	},
 	ProductVariantInput: {
+		ageMinMonths: {
+			type: 'Int',
+		},
+		ageMaxMonths: {
+			type: 'Int',
+		},
+		images: {
+			type: '[String!]',
+		},
 		color: {
 			type: 'String',
 		},
@@ -351,6 +376,15 @@ export const inputTypes = {
 		},
 	},
 	ProductUpdate: {
+		saleStart: {
+			type: 'DateTime',
+		},
+		saleEnd: {
+			type: 'DateTime',
+		},
+		productInstructions: {
+			type: 'String',
+		},
 		productName: {
 			type: 'String!',
 		},
@@ -435,6 +469,7 @@ export const inputTypes = {
 		},
 	},
 	ReviewInput: {
+        images: { type: '[String!]' },
 		group: {
 			type: 'ReviewGroup!',
 		},

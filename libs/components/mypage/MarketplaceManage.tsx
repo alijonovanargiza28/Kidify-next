@@ -1,9 +1,12 @@
+import useUiText from '../../hooks/useUiText';
 import React, { useState } from 'react';
 import { Button, TextField, MenuItem, Alert } from '@mui/material';
 import { useMarketplace, useAction } from '../../hooks/useMarketplace';
-import { State, Pager, Photo } from '../common/Marketplace';
+import { State, Pager, Photo, money } from '../common/Marketplace';
 import MarketplaceForm from '../common/MarketplaceForm';
-import { useApolloClient } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
+import { sweetConfirmAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
+import { useReactiveVar, useApolloClient } from '@apollo/client';
 import { getBrandsByAdmin } from '../../../apollo/user/marketplace-query';
 import { addStarterBrands } from '../../utils/starterBrands';
 const configs: any = {
@@ -81,6 +84,8 @@ const configs: any = {
 	},
 };
 export default function Manage({ section, user }: any) {
+ const uiText = useUiText();
+
 	const client = useApolloClient();
 	const [seeding, setSeeding] = useState(false),
 		[seedMessage, setSeedMessage] = useState('');
@@ -92,24 +97,25 @@ export default function Manage({ section, user }: any) {
 		c.remove = 'removeBoardArticleByAdmin';
 		c.id = 'articleId';
 	}
-	const [page, setPage] = useState(1),
+	const [search,setSearch]=useState('');
+ const [page, setPage] = useState(1),
 		[editing, setEditing] = useState<any>(null);
 	const input: any = { page, limit: 10 };
-	if (section === 'products') input.search = {};
+	if (section === 'products') input.search = search.trim() ? {text:search.trim()} : {};
 	if (section === 'articles') input.search = user.memberType === 'ADMIN' ? {} : { memberId: user._id };
 	const q = useMarketplace(c.query, { input }),
 		brands = useMarketplace('getBrands', { input: { page: 1, limit: 100 } }, section !== 'products'),
 		action = useAction();
 	return (
 		<>
-			<div className="section-heading">
+			{!(section === 'products' && editing !== null) && <div className="section-heading">
 				<h2>{c.title}</h2>
 				{!(section === 'products' && user.memberType === 'ADMIN') && (
 					<Button variant="contained" onClick={() => setEditing({})}>
-						Create {c.title === 'FAQ' ? 'FAQ' : c.title.toLowerCase().replace(/s$/, '')}
+						{uiText("Create")}{c.title === 'FAQ' ? 'FAQ' : c.title.toLowerCase().replace(/s$/, '')}
 					</Button>
 				)}
-			</div>
+			</div>}
 			{section === 'brands' && user.memberType === 'ADMIN' && (
 				<>
 					<Button
@@ -143,12 +149,14 @@ export default function Manage({ section, user }: any) {
 					{seedMessage && <Alert severity="success">{seedMessage}</Alert>}
 				</>
 			)}
-			{editing !== null && (
+			{section === 'products' && editing === null && <TextField size="small" label={uiText('Search products')} value={search} onChange={e=>{setSearch(e.target.value);setPage(1)}} />}
+            {editing !== null && (
 				<>
 					<MarketplaceForm
 						key={editing._id || 'new'}
 						type={editing._id ? c.updateType || c.type : c.type}
 						initial={editing}
+                        onCancel={section === 'products' ? () => setEditing(null) : undefined}
 						hidden={['_id']}
 						brands={brands.value?.list}
 						brandsLoading={brands.loading}
@@ -165,17 +173,18 @@ export default function Manage({ section, user }: any) {
 							setEditing(null);
 						}}
 					/>
-					<Button onClick={() => setEditing(null)}>Cancel editing</Button>
+					{section !== 'products' && <Button onClick={() => setEditing(null)}>{uiText("Cancel editing")}</Button>}
 				</>
 			)}
-			<State query={q} empty={q.value?.list?.length === 0}>
+			{!(section === 'products' && editing !== null) && <State query={q} empty={q.value?.list?.length === 0}>
 				<div className="table-wrap">
 					<table className="data-table">
 						<thead>
 							<tr>
 								<th>{c.title}</th>
-								<th>Status</th>
-								<th>Actions</th>
+								{section === 'products' && <><th>{uiText('Category')}</th><th>{uiText('Price')}</th><th>{uiText('Stock')}</th></>}
+                                <th>{uiText("Status")}</th>
+								<th>{uiText("Actions")}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -187,10 +196,11 @@ export default function Manage({ section, user }: any) {
 										)}
 										<strong>{item[c.name]}</strong>
 									</td>
-									<td>{item.productStatus || item.articleStatus || item.brandStatus || item.status || '—'}</td>
+									{section === 'products' && <><td>{item.productCategory?.replace(/_/g,' ')}</td><td>{money(item.finalPrice ?? item.productPrice)}</td><td>{item.productStock ?? item.productVariants?.reduce((n:number,v:any)=>n+v.stock,0)}</td></>}
+                                    <td>{item.productStatus || item.articleStatus || item.brandStatus || item.status || '—'}</td>
 									<td>
 										<div className="row-actions">
-											{c.update && <Button onClick={() => setEditing(item)}>Edit</Button>}
+											{c.update && <Button onClick={() => setEditing(item)}>{uiText("Edit")}</Button>}
 											{section === 'products' && (
 												<>
 													<Button
@@ -211,8 +221,7 @@ export default function Manage({ section, user }: any) {
 																);
 														}}
 													>
-														Delete
-													</Button>
+														{uiText("Delete")}</Button>
 												</>
 											)}
 											{c.remove && (
@@ -233,11 +242,14 @@ export default function Manage({ section, user }: any) {
 					</table>
 				</div>
 				<Pager value={q.value} page={page} limit={10} onChange={setPage} />
-			</State>
+			</State>}
 		</>
 	);
 }
 export function Members({ type }: any) {
+ const uiText = useUiText();
+
+	const actor = useReactiveVar(userVar);
 	const [page, setPage] = useState(1),
 		[text, setText] = useState('');
 	const q = useMarketplace('getAllMemberByAdmin', {
@@ -248,7 +260,7 @@ export function Members({ type }: any) {
 		<>
 			<h2>{type === 'SELLER' ? 'All Sellers' : type === 'CS' ? 'CS Members' : 'All Users'}</h2>
 			<TextField
-				label="Search members"
+				label={uiText("Search members")}
 				value={text}
 				onChange={(e) => {
 					setText(e.target.value);
@@ -260,10 +272,10 @@ export function Members({ type }: any) {
 					<table className="data-table">
 						<thead>
 							<tr>
-								<th>Member</th>
-								<th>Role</th>
-								<th>Status</th>
-								<th>Action</th>
+								<th>{uiText("Member")}</th>
+								<th>{uiText("Role")}</th>
+								<th>{uiText("Status")}</th>
+								<th>{uiText("Action")}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -282,6 +294,27 @@ export function Members({ type }: any) {
 										>
 											{m.memberStatus === 'BLOCK' ? 'Unblock' : 'Block'}
 										</Button>
+										{m.memberStatus !== 'DELETE' && (
+											<Button
+												color="error"
+												disabled={m._id === actor._id}
+												onClick={async () => {
+													if (m._id === actor._id) return;
+													if (
+														!(await sweetConfirmAlert(
+															`Delete ${m.memberNick}? Their account will be disabled; order and other records will be preserved.`,
+														))
+													)
+														return;
+													try {
+														await action('updateMemberByAdmin', { input: { _id: m._id, memberStatus: 'DELETE' } });
+														await q.refetch();
+														await sweetMixinSuccessAlert('Member deleted');
+													} catch {}
+												}}
+											>
+												{uiText("Delete")}</Button>
+										)}
 										{m.memberType === 'USER' && (
 											<Button
 												onClick={() =>
@@ -290,8 +323,7 @@ export function Members({ type }: any) {
 													)
 												}
 											>
-												Assign CS
-											</Button>
+												{uiText("Assign CS")}</Button>
 										)}
 									</td>
 								</tr>

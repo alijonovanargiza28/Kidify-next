@@ -1,3 +1,5 @@
+import { CurrencySelector } from './common/Currency';
+import useUiText from '../hooks/useUiText';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -21,6 +23,8 @@ const nav = [
 	['CS', '/cs'],
 ];
 export default function Top() {
+ const uiText = useUiText();
+
 	const router = useRouter(),
 		{ t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
@@ -33,8 +37,7 @@ export default function Top() {
 		<header className="kidify-header">
 			<div className="kidify-container nav-inner">
 				<Link className="wordmark" href="/">
-					Kidify
-				</Link>
+					{uiText("Kidify")}</Link>
 				<nav>
 					{nav.map(([n, p]) => (
 						<Link key={p} href={p} className={router.pathname === p ? 'active' : ''}>
@@ -43,26 +46,26 @@ export default function Top() {
 					))}
 				</nav>
 				<div className="nav-actions">
-					<IconButton aria-label="Search" onClick={() => setOpen(true)}>
+					<IconButton aria-label={uiText("Search")} onClick={() => setOpen(true)}>
 						<SearchIcon />
 					</IconButton>
-					<IconButton aria-label="Wishlist" onClick={() => router.push('/wishlist')}>
+					<IconButton aria-label={uiText("Wishlist")} onClick={() => router.push('/wishlist')}>
 						<FavoriteBorder />
 					</IconButton>
-					<IconButton aria-label="Cart" onClick={() => router.push('/cart')}>
+					<IconButton aria-label={uiText("Cart")} onClick={() => router.push('/cart')}>
 						<Badge badgeContent={cart.value?.items?.length || 0} color="primary">
 							<ShoppingBagOutlined />
 						</Badge>
 					</IconButton>
 					{user._id && (
-						<IconButton aria-label="Notifications" onClick={() => router.push('/notifications')}>
+						<IconButton aria-label={uiText("Notifications")} onClick={() => router.push('/notifications')}>
 							<Badge badgeContent={notifications.value || 0} color="primary">
 								<NotificationsNone />
 							</Badge>
 						</IconButton>
 					)}
 					<IconButton
-						aria-label="Account menu"
+						aria-label={uiText("Account menu")}
 						aria-haspopup="menu"
 						aria-controls={accountAnchor ? 'account-menu' : undefined}
 						aria-expanded={Boolean(accountAnchor)}
@@ -104,7 +107,7 @@ export default function Top() {
 									router.push(href);
 								}}
 							>
-								{label}
+								{uiText(label)}
 							</MenuItem>
 						))}
 						{user._id && (
@@ -114,15 +117,18 @@ export default function Top() {
 									logOut();
 								}}
 							>
-								Sign out
-							</MenuItem>
+								{uiText("Sign out")}</MenuItem>
 						)}
 					</Menu>
+                    <CurrencySelector />
 					<Select
 						inputProps={{ 'aria-label': 'Language' }}
 						size="small"
 						value={router.locale || 'en'}
-						onChange={(e) => router.push(router.asPath, router.asPath, { locale: e.target.value })}
+						onChange={(e) => {
+                            document.cookie = `NEXT_LOCALE=${e.target.value}; Path=/; Max-Age=31536000; SameSite=Lax`;
+                            router.push(router.asPath, router.asPath, { locale: e.target.value });
+                        }}
 					>
 						{['en', 'ko', 'uz'].map((l) => (
 							<MenuItem key={l} value={l}>
@@ -141,11 +147,10 @@ export default function Top() {
 						router.push({ pathname: '/products', query: { text } });
 					}}
 				>
-					<h2>Search products</h2>
-					<TextField autoFocus label="Product name" value={text} onChange={(e) => setText(e.target.value)} />
+					<h2>{uiText("Search products")}</h2>
+					<TextField autoFocus label={uiText("Product name")} value={text} onChange={(e) => setText(e.target.value)} />
 					<Button type="submit" variant="contained">
-						Search
-					</Button>
+						{uiText("Search")}</Button>
 				</form>
 			</Dialog>
 		</header>

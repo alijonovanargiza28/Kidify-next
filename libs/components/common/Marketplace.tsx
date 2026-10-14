@@ -1,3 +1,5 @@
+import { Money } from './Currency';
+import useUiText from '../../hooks/useUiText';
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,19 +13,22 @@ export const imageUrl = (src?: string) =>
 		: src.startsWith('/img/')
 		? src
 		: `${REACT_APP_API_URL}/${src.replace(/^\//, '')}`;
-export const money = (n: number) => new Intl.NumberFormat('en', { maximumFractionDigits: 2 }).format(n ?? 0);
+export const money = (n: number) => <Money amount={n} />;
 export function Photo({ src, alt = '', ...props }: any) {
+ const uiText = useUiText();
+
 	const [failed, setFailed] = React.useState(false);
 	React.useEffect(() => setFailed(false), [src]);
 	return src && !failed ? (
 		<img {...props} src={imageUrl(src)} alt={alt} onError={() => setFailed(true)} />
 	) : (
 		<div className="photo-fallback" role="img" aria-label={alt || 'Image unavailable'}>
-			Kidify
-		</div>
+			{uiText("Kidify")}</div>
 	);
 }
 export function State({ query, empty, children }: any) {
+ const uiText = useUiText();
+
 	if (query.loading && !query.value)
 		return (
 			<div className="loading-grid">
@@ -34,11 +39,11 @@ export function State({ query, empty, children }: any) {
 		);
 	if (query.error)
 		return (
-			<Alert severity="error" action={<Button onClick={() => query.refetch()}>Retry</Button>}>
+			<Alert severity="error" action={<Button onClick={() => query.refetch()}>{uiText("Retry")}</Button>}>
 				{query.error.message}
 			</Alert>
 		);
-	if (empty) return <div className="empty-state">Nothing here yet.</div>;
+	if (empty) return <div className="empty-state">{uiText("Nothing here yet.")}</div>;
 	return <>{children}</>;
 }
 export function Pager({ value, page, onChange, limit = 12 }: any) {
@@ -48,10 +53,12 @@ export function Pager({ value, page, onChange, limit = 12 }: any) {
 	) : null;
 }
 export function PageTitle({ title, subtitle }: any) {
+ const uiText = useUiText();
+
 	return (
 		<div className="page-title">
 			<p className="eyebrow">
-				<Link href="/">Home</Link> / {title}
+				<Link href="/">{uiText("Home")}</Link> / {title}
 			</p>
 			<h1>{title}</h1>
 			{subtitle && <p>{subtitle}</p>}
@@ -59,21 +66,22 @@ export function PageTitle({ title, subtitle }: any) {
 	);
 }
 export function RequireMember({ user, children, roles }: any) {
+ const uiText = useUiText();
+
 	const router = useRouter();
 	if (!user?._id)
 		return (
 			<div className="empty-state">
-				<h2>Welcome to Kidify</h2>
-				<p>Sign in to continue.</p>
+				<h2>{uiText("Welcome to Kidify")}</h2>
+				<p>{uiText("Sign in to continue.")}</p>
 				<Button
 					variant="contained"
 					onClick={() => router.push({ pathname: '/account/join', query: { returnTo: router.asPath } })}
 				>
-					Sign in
-				</Button>
+					{uiText("Sign in")}</Button>
 			</div>
 		);
 	if (roles && !roles.includes(user.memberType))
-		return <Alert severity="warning">You do not have access to this page.</Alert>;
+		return <Alert severity="warning">{uiText("You do not have access to this page.")}</Alert>;
 	return <>{children}</>;
 }

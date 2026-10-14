@@ -1,3 +1,4 @@
+import useUiText from '../../libs/hooks/useUiText';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +14,8 @@ export const getStaticProps = async ({ locale }: any) => ({
 	props: { ...(await serverSideTranslations(locale, ['common'])) },
 });
 function Community() {
+ const uiText = useUiText();
+
 	const router = useRouter(),
 		user = useReactiveVar(userVar),
 		[page, setPage] = useState(1),
@@ -23,10 +26,10 @@ function Community() {
 	});
 	return (
 		<>
-			<PageTitle title="Community" subtitle="Stories, advice and little moments worth sharing." />
+			<PageTitle title={uiText("Community")} subtitle={uiText("Stories, advice and little moments worth sharing.")} />
 			<div className="result-toolbar">
 				<TextField
-					label="Search stories"
+					label={uiText("Search stories")}
 					value={text}
 					onChange={(e) => {
 						setText(e.target.value);
@@ -35,7 +38,7 @@ function Community() {
 				/>
 				<TextField InputLabelProps={{htmlFor:undefined}}
 					select
-					label="Category"
+					label={uiText("Category")}
 					value={category}
 					onChange={(e) => {
 						setCategory(e.target.value);
@@ -43,7 +46,7 @@ function Community() {
 					}}
 					fullWidth
 				>
-					<MenuItem value="">All</MenuItem>
+					<MenuItem value="">{uiText("All")}</MenuItem>
 					{backendEnums.BoardArticleCategory.map((c) => (
 						<MenuItem key={c} value={c}>
 							{c.replace(/_/g, ' ')}
@@ -51,7 +54,7 @@ function Community() {
 					))}
 				</TextField>
 				{['SELLER', 'ADMIN'].includes(user.memberType) && (
-					<Button onClick={() => router.push('/mypage?category=articles')}>Write an article</Button>
+					<Button onClick={() => router.push('/mypage?category=articles')}>{uiText("Write an article")}</Button>
 				)}
 			</div>
 			<State query={q} empty={q.value?.list?.length === 0}>
@@ -63,9 +66,8 @@ function Community() {
 								<p className="eyebrow">{a.articleCategory.replace(/_/g, ' ')}</p>
 								<h3>{a.articleTitle}</h3>
 								<p>
-									{a.memberData?.memberNick} · {a.articleViews} views
-								</p>
-								<span>Read Story →</span>
+									{a.memberData?.memberNick} · {a.articleViews} {uiText("views")}</p>
+								<span>{uiText("Read Story →")}</span>
 							</div>
 						</Link>
 					))}

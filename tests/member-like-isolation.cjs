@@ -1,0 +1,41 @@
+const fs=require('fs'),assert=require('assert'),ts=require('typescript'),Module=require('module');
+for(const ext of ['.ts','.tsx'])require.extensions[ext]=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020,jsx:ts.JsxEmit.React,esModuleInterop:true}}).outputText,f);
+const {JSDOM}=require('jsdom'),dom=new JSDOM('<div id="test"></div>',{url:'http://localhost/'});for(const k of ['window','document','navigator','HTMLElement','Element','Node'])global[k]=dom.window[k];global.IS_REACT_ACT_ENVIRONMENT=true;
+const React=require('react'),{createRoot}=require('react-dom/client'),{act}=require('react-dom/test-utils');
+const {ApolloClient,ApolloProvider,InMemoryCache,ApolloLink,Observable,gql,useQuery}=require('@apollo/client');
+const viewer='viewer',target='seller',mutations=[],followActions=[],alerts=[];let rejectNext=false;
+const follow=[{__typename:'MeFollowed',followingId:target,followerId:viewer,myFollowing:true}];
+const query=gql`query SellerLikeFixture { getSellers { list { _id memberNick memberLikes memberFollowers memberViews meLiked { memberId likeRefId myFavorite } meFollowed { followingId followerId myFollowing } } } }`;
+const connections=gql`query ConnectionsLikeFixture { getMyFollowings { list { _id followingData { _id memberLikes } meLiked {memberId likeRefId myFavorite} meFollowed {followingId followerId myFollowing} } } }`;
+const cache=new InMemoryCache();cache.writeQuery({query,data:{getSellers:{__typename:'Members',list:[{__typename:'Member',_id:target,memberNick:'Fixture Seller',memberLikes:0,memberFollowers:4,memberViews:7,meLiked:[],meFollowed:follow}]}}});
+cache.writeQuery({query:connections,data:{getMyFollowings:{__typename:'Followings',list:[{__typename:'Following',_id:'relation',followingData:{__typename:'Member',_id:target,memberLikes:0},meLiked:[],meFollowed:follow}]}}});
+const client=new ApolloClient({cache,link:new ApolloLink(operation=>new Observable(observer=>{
+ mutations.push(operation.operationName);
+ setTimeout(()=>{if(rejectNext){rejectNext=false;observer.error(new Error('fixture failure'));return;}observer.next({data:{likeTargetMember:{__typename:'Member',_id:target,memberLikes:mutations.length%2,meFollowed:null,meLiked:null}}});observer.complete();},0);
+}))});let refetches=0;client.refetchQueries=()=>{refetches++;return Promise.resolve([])};
+const originalLoad=Module._load;Module._load=function(name,...args){
+ if(name==='next/link')return ({children,href,...props})=>React.createElement('a',{...props,href:'#'},children);
+ if(name==='next/router')return {useRouter:()=>({push:()=>assert.fail('Like must not navigate'),asPath:'/'})};
+ if(name==='@apollo/client')return {...originalLoad.call(this,name,...args),useReactiveVar:()=>({_id:viewer})};
+ if(name.endsWith('apollo/store'))return {userVar:{}};
+ if(name.includes('useUiText'))return {__esModule:true,default:()=>x=>x};
+ if(name.includes('hooks/useMarketplace'))return {useAction:()=>async(...args)=>followActions.push(args)};
+ if(name==='../common/Marketplace')return {Photo:()=>null};
+ if(name.endsWith('sweetAlert'))return {sweetErrorAlert:async e=>alerts.push(e)};
+ return originalLoad.call(this,name,...args);
+};
+const Card=require('../libs/components/seller/MarketplaceSellerCard').default;
+const followStates=[];function Harness(){const {data}=useQuery(query,{fetchPolicy:'cache-only'});followStates.push(data?.getSellers.list[0].meFollowed.length);return React.createElement(Card,{seller:data.getSellers.list[0],compact:true})}
+(async()=>{const root=createRoot(document.getElementById('test'));
+await act(async()=>root.render(React.createElement(ApolloProvider,{client},React.createElement(Harness))));
+const button=()=>document.querySelector('.seller-card-copy button');assert.equal(button().textContent,'Unfollow');
+await act(async()=>{document.querySelector('.seller-top-heart').click();document.querySelector('.seller-top-heart').click();await new Promise(r=>setTimeout(r,20));});
+assert.deepEqual(mutations,['likeTargetMember']);assert.equal(followActions.length,0);assert.equal(refetches,0);
+assert.equal(button().textContent,'Unfollow');assert.equal(button().getAttribute('aria-pressed'),'true');assert.equal(document.querySelector('.seller-top-heart').getAttribute('aria-pressed'),'true');
+assert(followStates.every(n=>n===1),'follow state must never flicker during like');
+assert.equal(cache.readQuery({query}).getSellers.list[0].memberLikes,1);assert.equal(cache.readQuery({query:connections}).getMyFollowings.list[0].meLiked[0].myFavorite,true);assert.equal(cache.readQuery({query:connections}).getMyFollowings.list[0].meFollowed.length,1);
+await act(async()=>{document.querySelector('.seller-top-heart').click();await new Promise(r=>setTimeout(r,20));});
+assert.equal(button().textContent,'Unfollow');assert.equal(cache.readQuery({query}).getSellers.list[0].memberLikes,0);assert.equal(cache.readQuery({query:connections}).getMyFollowings.list[0].meLiked.length,0);
+rejectNext=true;await act(async()=>{document.querySelector('.seller-top-heart').click();await new Promise(r=>setTimeout(r,20));});assert.equal(alerts.length,1);assert.equal(button().textContent,'Unfollow');assert.equal(document.querySelector('.seller-top-heart').disabled,false);assert.equal(cache.readQuery({query}).getSellers.list[0].memberLikes,0);
+await act(async()=>root.unmount());console.log('PASS real Apollo cache: Like/Unlike preserves Follow continuously, no subscribe/unsubscribe, no global refetch, duplicate click locked, counters and relationship hearts synchronize');
+})().catch(e=>{console.error(e);process.exit(1)});

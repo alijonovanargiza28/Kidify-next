@@ -1,0 +1,21 @@
+.openChat {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ padding: 10px 22px;
+ min-height: 42px;
+ border: 1px solid #e9c4d0;
+ border-radius: 12px;
+ background: #fff;
+ color: #91485b;
+ font-family: inherit;
+ font-size: 14px;
+ font-weight: 500;
+ line-height: 1.4;
+ cursor: pointer;
+ transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+ &:hover { background: #fff4f7; border-color: #d79bae; }
+ &:focus-visible { outline: 2px solid #91485b; outline-offset: 3px; }
+ &:active { background: #fce9ef; }
+ @media (prefers-reduced-motion: reduce) { transition: none; }
+}

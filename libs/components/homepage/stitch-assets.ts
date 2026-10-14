@@ -13,15 +13,15 @@ export const stitchImages = [
 		alt: 'Organic Baby Care and Bath Essentials',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKVJ7Zo78c_X9_BGa1St5kio8A33jg9TqYirUMNREzNJ9iLohxQgC9fvDiLJ9vYHMGviveEUuWAzlLYHIqL7kURTGoEMREkvXeF5wHUECmHX-n99QNPgkyx5HF_HRWuBbSWog_WvKyjNlWY_3iKB2VO1bJn4kSTx-ZQFTZWmzXNhh-3YEWJ79b3Q1XpGvqkv9eaGfGC4DBZeZQcLiFZK83lVXFxd_2SIZbEIfoYpiwzHRpCRIAXjmN',
+		src: '/img/stitch/original-3.png',
 		alt: 'Cute unicorn plush',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDv4hxokqGg7cChqQBVb4N6cXL8v3DmFqJtq3cc3VsTgtqgaTxi2PvPjYsYdj25iFm84w-hTjQBTJWGQZ19R5vWRqadrMphjz1t7x_rN8i97TiQ9VWdJSyB8Hm6VzAxoFsRDY1-hyvUxyBERdgDE8965LEMe3Ci-g7WlISQAVXjPKc8h40ZwsFa_TgkFTxlAJityLGCzQQ9gjrf9scHlZBJ3ugNkrjl-sin3x3-gzlOwUHt2s867xi0',
+		src: '/img/stitch/original-4.png',
 		alt: 'Soft elephant plush',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRcB2BJzXX1LfLdpRGQloee-twfVVpIGVkXdOczaQ7Aq9QSWh0c8y9SlQCchEbsVk3x3A0Ys9g9tm4aPVCtFwMFQlgf7zlfgfMp96QXiHcoVMwIrRJf0etffH4p-rj4ccSHfRQF1AlkIbLFDw4wtX4LvGeE7cZHhFuar19_mKOOXXfwHqrc_pSHwEdGS97drxrBuEudCjLFlPG-Rn0btREACUYAVocRPLidTU699-Kl2DgrKEtKMzI',
+		src: '/img/stitch/original-5.png',
 		alt: 'Pastel stacking ring toy',
 	},
 	{
@@ -29,27 +29,27 @@ export const stitchImages = [
 		alt: 'Newborn Baby Essentials',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBSeOP-q2XLXvLUR95se1Hmc36FO80TdjRD5qGSatQ987iG2kDhksCg-jrkeXR4fmk6QGV1xP16qWTGYOVQq3mAaA4AjJjQvSvG2Q-4PEYu5ncutkNbLnEco83HZQiNE8Bcszp4Lip3Jg0-DHI8AZbbXCzXli0U_AeF5wpoZ8UxJIKF0cNLQCWqgU0vx2VTUAvdjSopPKPaZuLf0r2NdrznAhKiv-h5CPdCsyqUzcI1uwrOvkCKqcPT',
+		src: '/img/stitch/original-8.png',
 		alt: 'Best Collections For Baby',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBSeOP-q2XLXvLUR95se1Hmc36FO80TdjRD5qGSatQ987iG2kDhksCg-jrkeXR4fmk6QGV1xP16qWTGYOVQq3mAaA4AjJjQvSvG2Q-4PEYu5ncutkNbLnEco83HZQiNE8Bcszp4Lip3Jg0-DHI8AZbbXCzXli0U_AeF5wpoZ8UxJIKF0cNLQCWqgU0vx2VTUAvdjSopPKPaZuLf0r2NdrznAhKiv-h5CPdCsyqUzcI1uwrOvkCKqcPT',
+		src: '/img/stitch/original-8.png',
 		alt: 'Girls Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC9mxR4xn80sPaWXpop30W6f3D7qU_HasWdsIfzPps8_Cm0FaCCC5Mz6Zom9JpEdLfefCAyHpDGdYTKHp_ccffupZTkEqMqylJpo3VPAYot6f_q6Qai3sQWn-opuvehYuSWaLvXeQY7HwcGtfnpVF-3bRIPitnYEPpyXqNotcJTlTEEfIiS2odoiWA0VpRqhtb3_C8YIsr7iV2E88Aaichqtg4bzrv35spGIREpWzvs6DW4DOK4BhM9',
+		src: '/img/stitch/original-9.png',
 		alt: 'Boys Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVVg63ocQvUvE4vJs4Y4gITArm2JPXfcvDo0h53XF2bggym2ZH0VAcWStdNZ1VjdWmY4sh4vcYJZJkNw5qpZGJDpoWmkkEsNSPrpPYsjd8LZzTQMu6YIWAuDLaRpP0z5AEVpDBkYKQ4sr8UJQBUcWFnhbVdnpecmzFqNs0Y0M0-CuzGaIhBSDp4PjPMMw2KOhK5EpqV7xNes37osWPxUK-GLB2U6ImV4pn7vBWI0un18GWNponbvz4',
+		src: '/img/stitch/original-10.png',
 		alt: 'Newborn Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJTFmAPNJ_pen9rl7KZ3QYvPZ1a1E6h2FquSIMCXAoidxeAGjAD-Ak-Vq9Q3UM-F3v_UltmtRzBZSecAD3nqyI22-7-ywGzGEseLsc5Exm0wn_Fs1EclZx-rkAERQ2-Fg4BKn2Iky01G-zs3MZYz9yYiwTVZ-boicUoBUWMYq9nImQvPYIPp7hCdJF5ZqizlwFKzVcLWOWHT31XIrfGgdROmns_1iEXxGq6q1f2KBQwvNEwcghtTMm',
+		src: '/img/stitch/original-11.png',
 		alt: 'Baby Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLQDb0VMhO1GrwsiKyLln43YNxUcqD3qa7zKCRyVwapGAQZvy-lGFBsDF9OEzIOGCbblFHUj-y4jzAt-J5sxaxBCFcLIxYrKFg9jnVnahVgpcBv8lC1jqqIWb1El4-X-Z8gxulN86DoZmwAbMGH9oIpgLwHjHUiaTzeUiz__K2vYVsyXVPGbavr-LiTraR2yioepGN59IcpGwarxxMVEYTZ0GF0B6IEqpuTfeYLMcbNOUPEnNH2_VV',
+		src: '/img/stitch/original-12.png',
 		alt: 'Shoes Category',
 	},
 	{
@@ -57,15 +57,15 @@ export const stitchImages = [
 		alt: 'Accessories Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB3VCMe6NvjQs4AGkS_wTWvMTB1JFYYjbhtpcypqIiw80iAXhv2RNGEX3ksGuvpxz5eW1G6w4n3fn5bQfjYmeKKYT6sQkRDfLxtIELcmGCDqqv2OZtvozCMYK4k2BQ_UHv7385lh-ceNKXKU-uTSMpamT1Rwn0tHviiTg3XueNq6CjYSlTMHE2-AUzvFLBNMbWpnLeny3OAKSXhlP0qBCJgHye6Oq49rRG1F4KOINYsOauSby1R39wa',
+		src: '/img/stitch/original-14.png',
 		alt: 'Toys Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBMY48VXmvUTQFZ1fFsvKtwiOMneRd6e48DYqs4VWfCHf5DBy1YZIs3TlFl-9ny6MdiL4WgS_qdvnPRC08IgLYkZqYjUhqYRnhFBh1BXKZI2MggjpvY9RmNGu3xB8Iof5KluB5xdW-g1p8j-xF0ArsmHJAhzVdSSCoDaHFq1NtWGVBz4V48PIaK5vQGF1mdQPzZCdOCVOmQf4qwpckAzGvgJheHpy93cFJn8VtFX5vRPPL738F0H1SU',
+		src: '/img/stitch/original-15.png',
 		alt: 'Books Category',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKVJ7Zo78c_X9_BGa1St5kio8A33jg9TqYirUMNREzNJ9iLohxQgC9fvDiLJ9vYHMGviveEUuWAzlLYHIqL7kURTGoEMREkvXeF5wHUECmHX-n99QNPgkyx5HF_HRWuBbSWog_WvKyjNlWY_3iKB2VO1bJn4kSTx-ZQFTZWmzXNhh-3YEWJ79b3Q1XpGvqkv9eaGfGC4DBZeZQcLiFZK83lVXFxd_2SIZbEIfoYpiwzHRpCRIAXjmN',
+		src: '/img/stitch/original-3.png',
 		alt: 'Blankets and Knits',
 	},
 	{
@@ -101,11 +101,11 @@ export const stitchImages = [
 		alt: 'Keepsake Jewelry',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRcB2BJzXX1LfLdpRGQloee-twfVVpIGVkXdOczaQ7Aq9QSWh0c8y9SlQCchEbsVk3x3A0Ys9g9tm4aPVCtFwMFQlgf7zlfgfMp96QXiHcoVMwIrRJf0etffH4p-rj4ccSHfRQF1AlkIbLFDw4wtX4LvGeE7cZHhFuar19_mKOOXXfwHqrc_pSHwEdGS97drxrBuEudCjLFlPG-Rn0btREACUYAVocRPLidTU699-Kl2DgrKEtKMzI',
+		src: '/img/stitch/original-5.png',
 		alt: 'Feeding & Dining',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxLC6uScPMGvmjMB5ax5XngV7XVj45vmhDH2OkhLllpbOrNZkhYSUeK9nkfo9Tlpq8DuHflwO2nY0iR0UANZXtzXTnpP7MSOWx1QoPRAAKas3O8BJl4-uerWShbvNF70H91c6SsdZHmKvLevPusM_yFABYMZv-50X5QdsWACJUn2XNxAnVCzYB-B2BbuDrIYGIzpKc0yZ_BwUQreM2WGm_sPu7ogiu0P4UtfkdjwduYnx5nI1bDWOX',
+		src: '/img/stitch/original-26.png',
 		alt: 'Strollers & Carriers',
 	},
 	{
@@ -113,7 +113,7 @@ export const stitchImages = [
 		alt: 'Handcrafted Decor',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJTFmAPNJ_pen9rl7KZ3QYvPZ1a1E6h2FquSIMCXAoidxeAGjAD-Ak-Vq9Q3UM-F3v_UltmtRzBZSecAD3nqyI22-7-ywGzGEseLsc5Exm0wn_Fs1EclZx-rkAERQ2-Fg4BKn2Iky01G-zs3MZYz9yYiwTVZ-boicUoBUWMYq9nImQvPYIPp7hCdJF5ZqizlwFKzVcLWOWHT31XIrfGgdROmns_1iEXxGq6q1f2KBQwvNEwcghtTMm',
+		src: '/img/stitch/original-11.png',
 		alt: 'Romper',
 	},
 	{
@@ -125,7 +125,7 @@ export const stitchImages = [
 		alt: 'Overalls',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKVJ7Zo78c_X9_BGa1St5kio8A33jg9TqYirUMNREzNJ9iLohxQgC9fvDiLJ9vYHMGviveEUuWAzlLYHIqL7kURTGoEMREkvXeF5wHUECmHX-n99QNPgkyx5HF_HRWuBbSWog_WvKyjNlWY_3iKB2VO1bJn4kSTx-ZQFTZWmzXNhh-3YEWJ79b3Q1XpGvqkv9eaGfGC4DBZeZQcLiFZK83lVXFxd_2SIZbEIfoYpiwzHRpCRIAXjmN',
+		src: '/img/stitch/original-3.png',
 		alt: 'Swaddle',
 	},
 	{
@@ -133,7 +133,7 @@ export const stitchImages = [
 		alt: 'Christening Gown',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRcB2BJzXX1LfLdpRGQloee-twfVVpIGVkXdOczaQ7Aq9QSWh0c8y9SlQCchEbsVk3x3A0Ys9g9tm4aPVCtFwMFQlgf7zlfgfMp96QXiHcoVMwIrRJf0etffH4p-rj4ccSHfRQF1AlkIbLFDw4wtX4LvGeE7cZHhFuar19_mKOOXXfwHqrc_pSHwEdGS97drxrBuEudCjLFlPG-Rn0btREACUYAVocRPLidTU699-Kl2DgrKEtKMzI',
+		src: '/img/stitch/original-5.png',
 		alt: 'Wooden Rattle',
 	},
 	{
@@ -145,11 +145,11 @@ export const stitchImages = [
 		alt: 'Ribbed Lounge Set',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxLC6uScPMGvmjMB5ax5XngV7XVj45vmhDH2OkhLllpbOrNZkhYSUeK9nkfo9Tlpq8DuHflwO2nY0iR0UANZXtzXTnpP7MSOWx1QoPRAAKas3O8BJl4-uerWShbvNF70H91c6SsdZHmKvLevPusM_yFABYMZv-50X5QdsWACJUn2XNxAnVCzYB-B2BbuDrIYGIzpKc0yZ_BwUQreM2WGm_sPu7ogiu0P4UtfkdjwduYnx5nI1bDWOX',
+		src: '/img/stitch/original-26.png',
 		alt: 'Promotional banner',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJTFmAPNJ_pen9rl7KZ3QYvPZ1a1E6h2FquSIMCXAoidxeAGjAD-Ak-Vq9Q3UM-F3v_UltmtRzBZSecAD3nqyI22-7-ywGzGEseLsc5Exm0wn_Fs1EclZx-rkAERQ2-Fg4BKn2Iky01G-zs3MZYz9yYiwTVZ-boicUoBUWMYq9nImQvPYIPp7hCdJF5ZqizlwFKzVcLWOWHT31XIrfGgdROmns_1iEXxGq6q1f2KBQwvNEwcghtTMm',
+		src: '/img/stitch/original-11.png',
 		alt: 'Little Star Kids',
 	},
 	{
@@ -161,7 +161,7 @@ export const stitchImages = [
 		alt: 'Nordic Petite',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRcB2BJzXX1LfLdpRGQloee-twfVVpIGVkXdOczaQ7Aq9QSWh0c8y9SlQCchEbsVk3x3A0Ys9g9tm4aPVCtFwMFQlgf7zlfgfMp96QXiHcoVMwIrRJf0etffH4p-rj4ccSHfRQF1AlkIbLFDw4wtX4LvGeE7cZHhFuar19_mKOOXXfwHqrc_pSHwEdGS97drxrBuEudCjLFlPG-Rn0btREACUYAVocRPLidTU699-Kl2DgrKEtKMzI',
+		src: '/img/stitch/original-5.png',
 		alt: 'Woodland Toys',
 	},
 	{
@@ -169,11 +169,11 @@ export const stitchImages = [
 		alt: 'Maison B\u00e9b\u00e9',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKVJ7Zo78c_X9_BGa1St5kio8A33jg9TqYirUMNREzNJ9iLohxQgC9fvDiLJ9vYHMGviveEUuWAzlLYHIqL7kURTGoEMREkvXeF5wHUECmHX-n99QNPgkyx5HF_HRWuBbSWog_WvKyjNlWY_3iKB2VO1bJn4kSTx-ZQFTZWmzXNhh-3YEWJ79b3Q1XpGvqkv9eaGfGC4DBZeZQcLiFZK83lVXFxd_2SIZbEIfoYpiwzHRpCRIAXjmN',
+		src: '/img/stitch/original-3.png',
 		alt: 'Luna & Sol',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC9rihJQ6hS7Lw8wdE1KaMO7d4HkUzuFjWgZ1YDUgGpeQ-yqQEGFYwVOE4GJp5dDAcTmOCasrZ3No0vWJJm10g3s4CqENlyOvJclaf9ICFAvfBfyX-WWyMEQQOmJWQcyNJLPCtlGVA9qEQ242OQR8qnNAwRgx3pVAzyC42SGt8e1RGy2mca1KDOwgrZRkUiNOB_paIBLirdYmA--n_2itvRSHo_Xx6bLp7tXEbRDyXkOXTWlMX0f_jA',
+		src: '/img/stitch/original-43.png',
 		alt: 'Vintage Bonnet',
 	},
 	{
@@ -181,7 +181,7 @@ export const stitchImages = [
 		alt: 'Playmat',
 	},
 	{
-		src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDv4hxokqGg7cChqQBVb4N6cXL8v3DmFqJtq3cc3VsTgtqgaTxi2PvPjYsYdj25iFm84w-hTjQBTJWGQZ19R5vWRqadrMphjz1t7x_rN8i97TiQ9VWdJSyB8Hm6VzAxoFsRDY1-hyvUxyBERdgDE8965LEMe3Ci-g7WlISQAVXjPKc8h40ZwsFa_TgkFTxlAJityLGCzQQ9gjrf9scHlZBJ3ugNkrjl-sin3x3-gzlOwUHt2s867xi0',
+		src: '/img/stitch/original-4.png',
 		alt: 'Teething Ring',
 	},
 	{

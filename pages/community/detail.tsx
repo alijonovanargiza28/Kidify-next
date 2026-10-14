@@ -1,3 +1,4 @@
+import useUiText from '../../libs/hooks/useUiText';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -14,6 +15,8 @@ export const getStaticProps = async ({ locale }: any) => ({
 	props: { ...(await serverSideTranslations(locale, ['common'])) },
 });
 function Article() {
+ const uiText = useUiText();
+
 	const router = useRouter(),
 		id = String(router.query.id || router.query.articleId || ''),
 		user = useReactiveVar(userVar),
@@ -33,8 +36,7 @@ function Article() {
 						/>
 					)}
 					<p>
-						{a.memberData?.memberNick} · {a.articleViews} views
-					</p>
+						{a.memberData?.memberNick} · {a.articleViews} {uiText("views")}</p>
 					<Viewer key={a._id} markdown={a.articleContent} />
 					<Button
 						variant="outlined"

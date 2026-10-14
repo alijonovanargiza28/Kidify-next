@@ -8,7 +8,11 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"changelog": "standard-version --skip.tag"
+		"changelog": "standard-version --skip.tag",
+		"test:auth": "node tests/auth-session.cjs && node tests/apollo-refresh.cjs",
+		"test:chat": "node tests/chat-transport.cjs",
+		"test:shopping": "node tests/wishlist-state.cjs && node tests/filter-ranges.cjs",
+		"test:currency": "node tests/currency.cjs && node tests/currency-ui.cjs"
 	},
 	"dependencies": {
 		"@mui/material": "^5.10.1",

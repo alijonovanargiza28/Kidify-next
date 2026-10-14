@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-
 export const createCoupon = gql`
 	mutation createCoupon($input: CouponInput!) {
 		createCoupon(input: $input) {
@@ -19,7 +18,6 @@ export const createCoupon = gql`
 		}
 	}
 `;
-
 export const updateCoupon = gql`
 	mutation updateCoupon($couponId: String!, $input: CouponInput!) {
 		updateCoupon(couponId: $couponId, input: $input) {
@@ -39,7 +37,6 @@ export const updateCoupon = gql`
 		}
 	}
 `;
-
 export const disableCoupon = gql`
 	mutation disableCoupon($couponId: String!) {
 		disableCoupon(couponId: $couponId) {
@@ -59,13 +56,13 @@ export const disableCoupon = gql`
 		}
 	}
 `;
-
 export const addToCart = gql`
 	mutation addToCart($input: CartItemInput!) {
 		addToCart(input: $input) {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -76,6 +73,9 @@ export const addToCart = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -92,6 +92,9 @@ export const addToCart = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -122,13 +125,13 @@ export const addToCart = gql`
 		}
 	}
 `;
-
 export const updateCartItem = gql`
 	mutation updateCartItem($itemId: String!, $quantity: Int!) {
 		updateCartItem(itemId: $itemId, quantity: $quantity) {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -139,6 +142,9 @@ export const updateCartItem = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -155,6 +161,9 @@ export const updateCartItem = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -185,13 +194,13 @@ export const updateCartItem = gql`
 		}
 	}
 `;
-
 export const removeCartItem = gql`
 	mutation removeCartItem($itemId: String!) {
 		removeCartItem(itemId: $itemId) {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -202,6 +211,9 @@ export const removeCartItem = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -218,6 +230,9 @@ export const removeCartItem = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -248,13 +263,13 @@ export const removeCartItem = gql`
 		}
 	}
 `;
-
 export const clearCart = gql`
 	mutation clearCart {
 		clearCart {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -265,6 +280,9 @@ export const clearCart = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -281,6 +299,9 @@ export const clearCart = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -311,13 +332,13 @@ export const clearCart = gql`
 		}
 	}
 `;
-
 export const moveFavoriteToCart = gql`
 	mutation moveFavoriteToCart($input: CartItemInput!) {
 		moveFavoriteToCart(input: $input) {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -328,6 +349,9 @@ export const moveFavoriteToCart = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -344,6 +368,9 @@ export const moveFavoriteToCart = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -374,13 +401,13 @@ export const moveFavoriteToCart = gql`
 		}
 	}
 `;
-
 export const moveCartItemToFavorite = gql`
 	mutation moveCartItemToFavorite($itemId: String!) {
 		moveCartItemToFavorite(itemId: $itemId) {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -391,6 +418,9 @@ export const moveCartItemToFavorite = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -407,6 +437,9 @@ export const moveCartItemToFavorite = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -437,10 +470,12 @@ export const moveCartItemToFavorite = gql`
 		}
 	}
 `;
-
 export const createProduct = gql`
 	mutation createProduct($input: ProductInput!) {
 		createProduct(input: $input) {
+			saleStart
+			saleEnd
+			productInstructions
 			_id
 			productName
 			productDesc
@@ -457,6 +492,9 @@ export const createProduct = gql`
 			productSellerId
 			productStatus
 			productVariants {
+				ageMinMonths
+				ageMaxMonths
+				images
 				_id
 				color
 				size
@@ -483,10 +521,12 @@ export const createProduct = gql`
 		}
 	}
 `;
-
 export const updateProduct = gql`
 	mutation updateProduct($input: ProductUpdate!) {
 		updateProduct(input: $input) {
+			saleStart
+			saleEnd
+			productInstructions
 			_id
 			productName
 			productDesc
@@ -503,6 +543,9 @@ export const updateProduct = gql`
 			productSellerId
 			productStatus
 			productVariants {
+				ageMinMonths
+				ageMaxMonths
+				images
 				_id
 				color
 				size
@@ -529,10 +572,12 @@ export const updateProduct = gql`
 		}
 	}
 `;
-
 export const changeProductStatus = gql`
 	mutation changeProductStatus($productId: String!, $status: ProductStatus!) {
 		changeProductStatus(productId: $productId, status: $status) {
+			saleStart
+			saleEnd
+			productInstructions
 			_id
 			productName
 			productDesc
@@ -549,6 +594,9 @@ export const changeProductStatus = gql`
 			productSellerId
 			productStatus
 			productVariants {
+				ageMinMonths
+				ageMaxMonths
+				images
 				_id
 				color
 				size
@@ -575,10 +623,12 @@ export const changeProductStatus = gql`
 		}
 	}
 `;
-
 export const favoriteProduct = gql`
 	mutation favoriteProduct($productId: String!) {
 		favoriteProduct(productId: $productId) {
+			saleStart
+			saleEnd
+			productInstructions
 			_id
 			productName
 			productDesc
@@ -595,6 +645,9 @@ export const favoriteProduct = gql`
 			productSellerId
 			productStatus
 			productVariants {
+				ageMinMonths
+				ageMaxMonths
+				images
 				_id
 				color
 				size
@@ -621,13 +674,11 @@ export const favoriteProduct = gql`
 		}
 	}
 `;
-
 export const clearRecentlyVisited = gql`
 	mutation clearRecentlyVisited {
 		clearRecentlyVisited
 	}
 `;
-
 export const createAddress = gql`
 	mutation createAddress($input: AddressInput!) {
 		createAddress(input: $input) {
@@ -646,7 +697,6 @@ export const createAddress = gql`
 		}
 	}
 `;
-
 export const updateAddress = gql`
 	mutation updateAddress($addressId: String!, $input: AddressInput!) {
 		updateAddress(addressId: $addressId, input: $input) {
@@ -665,13 +715,11 @@ export const updateAddress = gql`
 		}
 	}
 `;
-
 export const removeAddress = gql`
 	mutation removeAddress($addressId: String!) {
 		removeAddress(addressId: $addressId)
 	}
 `;
-
 export const setDefaultAddress = gql`
 	mutation setDefaultAddress($addressId: String!) {
 		setDefaultAddress(addressId: $addressId) {
@@ -690,7 +738,6 @@ export const setDefaultAddress = gql`
 		}
 	}
 `;
-
 export const createOrder = gql`
 	mutation createOrder($input: CheckoutInput!) {
 		createOrder(input: $input) {
@@ -737,7 +784,6 @@ export const createOrder = gql`
 		}
 	}
 `;
-
 export const cancelOrder = gql`
 	mutation cancelOrder($orderId: String!) {
 		cancelOrder(orderId: $orderId) {
@@ -784,13 +830,13 @@ export const cancelOrder = gql`
 		}
 	}
 `;
-
 export const buyAgain = gql`
 	mutation buyAgain($orderId: String!) {
 		buyAgain(orderId: $orderId) {
 			_id
 			memberId
 			items {
+				ageMonth
 				_id
 				productId
 				variantId
@@ -801,6 +847,9 @@ export const buyAgain = gql`
 				lineTotal
 				available
 				product {
+					saleStart
+					saleEnd
+					productInstructions
 					_id
 					productName
 					productDesc
@@ -817,6 +866,9 @@ export const buyAgain = gql`
 					productSellerId
 					productStatus
 					productVariants {
+						ageMinMonths
+						ageMaxMonths
+						images
 						_id
 						color
 						size
@@ -847,7 +899,6 @@ export const buyAgain = gql`
 		}
 	}
 `;
-
 export const updateSellerOrderItemStatus = gql`
 	mutation updateSellerOrderItemStatus($orderId: String!, $itemId: String!, $status: OrderStatus!) {
 		updateSellerOrderItemStatus(orderId: $orderId, itemId: $itemId, status: $status) {
@@ -874,7 +925,6 @@ export const updateSellerOrderItemStatus = gql`
 		}
 	}
 `;
-
 export const updateOrderStatusByAdmin = gql`
 	mutation updateOrderStatusByAdmin($orderId: String!, $status: OrderStatus!) {
 		updateOrderStatusByAdmin(orderId: $orderId, status: $status) {
@@ -921,7 +971,6 @@ export const updateOrderStatusByAdmin = gql`
 		}
 	}
 `;
-
 export const payOrderDemo = gql`
 	mutation payOrderDemo($paymentId: String!) {
 		payOrderDemo(paymentId: $paymentId) {
@@ -935,7 +984,6 @@ export const payOrderDemo = gql`
 		}
 	}
 `;
-
 export const failPaymentDemo = gql`
 	mutation failPaymentDemo($paymentId: String!) {
 		failPaymentDemo(paymentId: $paymentId) {
@@ -949,7 +997,6 @@ export const failPaymentDemo = gql`
 		}
 	}
 `;
-
 export const updateDeliveryStatus = gql`
 	mutation updateDeliveryStatus($orderId: String!, $status: OrderStatus!, $trackingCode: String) {
 		updateDeliveryStatus(orderId: $orderId, status: $status, trackingCode: $trackingCode) {
@@ -973,10 +1020,51 @@ export const updateDeliveryStatus = gql`
 		}
 	}
 `;
-
+export const likeReviewByAdmin = gql`
+	mutation likeReviewByAdmin($reviewId: String!) {
+		likeReviewByAdmin(reviewId: $reviewId) {
+			likeCount
+			adminReply
+			replyAuthorId
+			replyAt
+			_id
+			group
+			targetId
+			orderId
+			authorId
+			rating
+			text
+			status
+			createdAt
+		}
+	}
+`;
+export const replyReviewByAdmin = gql`
+	mutation replyReviewByAdmin($reviewId: String!, $text: String!) {
+		replyReviewByAdmin(reviewId: $reviewId, text: $text) {
+			likeCount
+			adminReply
+			replyAuthorId
+			replyAt
+			_id
+			group
+			targetId
+			orderId
+			authorId
+			rating
+			text
+			status
+			createdAt
+		}
+	}
+`;
 export const createReview = gql`
 	mutation createReview($input: ReviewInput!) {
 		createReview(input: $input) {
+			likeCount
+			adminReply
+			replyAuthorId
+			replyAt
 			_id
 			group
 			targetId
@@ -989,10 +1077,13 @@ export const createReview = gql`
 		}
 	}
 `;
-
 export const removeReviewByAdmin = gql`
 	mutation removeReviewByAdmin($reviewId: String!) {
 		removeReviewByAdmin(reviewId: $reviewId) {
+			likeCount
+			adminReply
+			replyAuthorId
+			replyAt
 			_id
 			group
 			targetId
@@ -1005,7 +1096,6 @@ export const removeReviewByAdmin = gql`
 		}
 	}
 `;
-
 export const sendMessage = gql`
 	mutation sendMessage($input: MessageInput!) {
 		sendMessage(input: $input) {
@@ -1019,7 +1109,6 @@ export const sendMessage = gql`
 		}
 	}
 `;
-
 export const markMessageRead = gql`
 	mutation markMessageRead($messageId: String!) {
 		markMessageRead(messageId: $messageId) {
@@ -1033,7 +1122,6 @@ export const markMessageRead = gql`
 		}
 	}
 `;
-
 export const createEvent = gql`
 	mutation createEvent($input: EventInput!) {
 		createEvent(input: $input) {
@@ -1050,7 +1138,6 @@ export const createEvent = gql`
 		}
 	}
 `;
-
 export const updateEvent = gql`
 	mutation updateEvent($id: String!, $input: EventInput!) {
 		updateEvent(id: $id, input: $input) {
@@ -1067,7 +1154,6 @@ export const updateEvent = gql`
 		}
 	}
 `;
-
 export const removeEvent = gql`
 	mutation removeEvent($id: String!) {
 		removeEvent(id: $id) {
@@ -1084,7 +1170,6 @@ export const removeEvent = gql`
 		}
 	}
 `;
-
 export const createFAQ = gql`
 	mutation createFAQ($input: FAQInput!) {
 		createFAQ(input: $input) {
@@ -1099,7 +1184,6 @@ export const createFAQ = gql`
 		}
 	}
 `;
-
 export const updateFAQ = gql`
 	mutation updateFAQ($id: String!, $input: FAQInput!) {
 		updateFAQ(id: $id, input: $input) {
@@ -1114,7 +1198,6 @@ export const updateFAQ = gql`
 		}
 	}
 `;
-
 export const removeFAQ = gql`
 	mutation removeFAQ($id: String!) {
 		removeFAQ(id: $id) {
@@ -1129,7 +1212,6 @@ export const removeFAQ = gql`
 		}
 	}
 `;
-
 export const createSupportTicket = gql`
 	mutation createSupportTicket($input: SupportInput!) {
 		createSupportTicket(input: $input) {
@@ -1151,7 +1233,6 @@ export const createSupportTicket = gql`
 		}
 	}
 `;
-
 export const replySupportTicket = gql`
 	mutation replySupportTicket($ticketId: String!, $text: String!) {
 		replySupportTicket(ticketId: $ticketId, text: $text) {
@@ -1173,7 +1254,6 @@ export const replySupportTicket = gql`
 		}
 	}
 `;
-
 export const assignSupportTicket = gql`
 	mutation assignSupportTicket($ticketId: String!, $csId: String!) {
 		assignSupportTicket(ticketId: $ticketId, csId: $csId) {
@@ -1195,7 +1275,6 @@ export const assignSupportTicket = gql`
 		}
 	}
 `;
-
 export const claimSupportTicket = gql`
 	mutation claimSupportTicket($ticketId: String!) {
 		claimSupportTicket(ticketId: $ticketId) {
@@ -1217,7 +1296,6 @@ export const claimSupportTicket = gql`
 		}
 	}
 `;
-
 export const updateSupportTicketStatus = gql`
 	mutation updateSupportTicketStatus($ticketId: String!, $status: SupportStatus!) {
 		updateSupportTicketStatus(ticketId: $ticketId, status: $status) {
@@ -1239,7 +1317,6 @@ export const updateSupportTicketStatus = gql`
 		}
 	}
 `;
-
 export const signup = gql`
 	mutation signup($input: MemberInput!) {
 		signup(input: $input) {
@@ -1284,7 +1361,6 @@ export const signup = gql`
 		}
 	}
 `;
-
 export const login = gql`
 	mutation login($input: LoginInput!) {
 		login(input: $input) {
@@ -1329,7 +1405,6 @@ export const login = gql`
 		}
 	}
 `;
-
 export const updateMember = gql`
 	mutation updateMember($input: MemberUpdate!) {
 		updateMember(input: $input) {
@@ -1374,57 +1449,18 @@ export const updateMember = gql`
 		}
 	}
 `;
-
 export const logout = gql`
 	mutation logout {
 		logout
 	}
 `;
-
+// The member like service returns a plain Member, without viewer follow/like lookups.
+// Never write its missing relationship fields over existing Apollo relationship state.
 export const likeTargetMember = gql`
-	mutation likeTargetMember($memberId: String!) {
-		likeTargetMember(memberId: $memberId) {
-			_id
-			memberType
-			memberStatus
-			memberAuthType
-			memberPhone
-			memberNick
-			memberFullName
-			memberImage
-			memberAddress
-			memberDesc
-			memberProducts
-			memberSales
-			memberReviews
-			averageRating
-			memberArticles
-			memberFollowers
-			memberFollowings
-			memberLikes
-			memberViews
-			memberComments
-			memberPoints
-			memberRank
-			memberWarnings
-			memberBlocks
-			deletedAt
-			createdAt
-			updatedAt
-			meLiked {
-				memberId
-				likeRefId
-				myFavorite
-			}
-			meFollowed {
-				followingId
-				followerId
-				myFollowing
-			}
-		}
-	}
+ mutation likeTargetMember($memberId: String!) {
+  likeTargetMember(memberId: $memberId) { _id memberLikes }
+ }
 `;
-
 export const updateMemberByAdmin = gql`
 	mutation updateMemberByAdmin($input: MemberUpdate!) {
 		updateMemberByAdmin(input: $input) {
@@ -1468,19 +1504,16 @@ export const updateMemberByAdmin = gql`
 		}
 	}
 `;
-
 export const imageUploader = gql`
 	mutation imageUploader($file: Upload!, $target: String!) {
 		imageUploader(file: $file, target: $target)
 	}
 `;
-
 export const imagesUploader = gql`
 	mutation imagesUploader($files: [Upload!]!, $target: String!) {
 		imagesUploader(files: $files, target: $target)
 	}
 `;
-
 export const createSellerCode = gql`
 	mutation createSellerCode($input: SellerCodeInput!) {
 		createSellerCode(input: $input) {
@@ -1496,7 +1529,6 @@ export const createSellerCode = gql`
 		}
 	}
 `;
-
 export const revokeSellerCode = gql`
 	mutation revokeSellerCode($codeId: String!) {
 		revokeSellerCode(codeId: $codeId) {
@@ -1512,7 +1544,6 @@ export const revokeSellerCode = gql`
 		}
 	}
 `;
-
 export const createBrand = gql`
 	mutation createBrand($input: BrandInput!) {
 		createBrand(input: $input) {
@@ -1526,7 +1557,6 @@ export const createBrand = gql`
 		}
 	}
 `;
-
 export const updateBrand = gql`
 	mutation updateBrand($id: String!, $input: BrandInput!) {
 		updateBrand(id: $id, input: $input) {
@@ -1540,7 +1570,6 @@ export const updateBrand = gql`
 		}
 	}
 `;
-
 export const removeBrand = gql`
 	mutation removeBrand($id: String!) {
 		removeBrand(id: $id) {
@@ -1554,7 +1583,6 @@ export const removeBrand = gql`
 		}
 	}
 `;
-
 export const markNotificationRead = gql`
 	mutation markNotificationRead($notificationId: String!) {
 		markNotificationRead(notificationId: $notificationId) {
@@ -1571,19 +1599,16 @@ export const markNotificationRead = gql`
 		}
 	}
 `;
-
 export const markAllNotificationsRead = gql`
 	mutation markAllNotificationsRead {
 		markAllNotificationsRead
 	}
 `;
-
 export const createSystemAnnouncement = gql`
 	mutation createSystemAnnouncement($title: String!) {
 		createSystemAnnouncement(title: $title)
 	}
 `;
-
 export const createBoardArticle = gql`
 	mutation createBoardArticle($input: BoardArticleInput!) {
 		createBoardArticle(input: $input) {
@@ -1646,7 +1671,6 @@ export const createBoardArticle = gql`
 		}
 	}
 `;
-
 export const updateBoardArticle = gql`
 	mutation updateBoardArticle($input: BoardArticleUpdate!) {
 		updateBoardArticle(input: $input) {
@@ -1709,7 +1733,6 @@ export const updateBoardArticle = gql`
 		}
 	}
 `;
-
 export const likeTargetBoardArticle = gql`
 	mutation likeTargetBoardArticle($articleId: String!) {
 		likeTargetBoardArticle(articleId: $articleId) {
@@ -1772,7 +1795,6 @@ export const likeTargetBoardArticle = gql`
 		}
 	}
 `;
-
 export const updateBoardArticleByAdmin = gql`
 	mutation updateBoardArticleByAdmin($input: BoardArticleUpdate!) {
 		updateBoardArticleByAdmin(input: $input) {
@@ -1835,7 +1857,6 @@ export const updateBoardArticleByAdmin = gql`
 		}
 	}
 `;
-
 export const removeBoardArticleByAdmin = gql`
 	mutation removeBoardArticleByAdmin($articleId: String!) {
 		removeBoardArticleByAdmin(articleId: $articleId) {
@@ -1898,7 +1919,6 @@ export const removeBoardArticleByAdmin = gql`
 		}
 	}
 `;
-
 export const createComment = gql`
 	mutation createComment($input: CommentInput!) {
 		createComment(input: $input) {
@@ -1952,7 +1972,6 @@ export const createComment = gql`
 		}
 	}
 `;
-
 export const updateComment = gql`
 	mutation updateComment($input: CommentUpdate!) {
 		updateComment(input: $input) {
@@ -2006,7 +2025,6 @@ export const updateComment = gql`
 		}
 	}
 `;
-
 export const removeCommentByAdmin = gql`
 	mutation removeCommentByAdmin($commentId: String!) {
 		removeCommentByAdmin(commentId: $commentId) {
@@ -2060,7 +2078,6 @@ export const removeCommentByAdmin = gql`
 		}
 	}
 `;
-
 export const subscribe = gql`
 	mutation subscribe($input: String!) {
 		subscribe(input: $input) {
@@ -2121,7 +2138,6 @@ export const subscribe = gql`
 		}
 	}
 `;
-
 export const unsubscribe = gql`
 	mutation unsubscribe($input: String!) {
 		unsubscribe(input: $input) {
@@ -2182,8 +2198,12 @@ export const unsubscribe = gql`
 		}
 	}
 `;
-
+export const likeReview = gql`mutation likeReview($reviewId: String!) { likeReview(reviewId: $reviewId) { _id likeCount } }`;
+export const replyReview = gql`mutation replyReview($reviewId: String!, $text: String!) { replyReview(reviewId: $reviewId, text: $text) { _id adminReply replyRole } }`;
+export const likeComment = gql`mutation likeComment($commentId: String!) { likeComment(commentId: $commentId) { _id likeCount } }`;
+export const replyComment = gql`mutation replyComment($commentId: String!, $text: String!) { replyComment(commentId: $commentId, text: $text) { _id replyText } }`;
 export const mutationOperations = {
+ likeReview, replyReview, likeComment, replyComment,
 	createCoupon,
 	updateCoupon,
 	disableCoupon,
@@ -2210,6 +2230,8 @@ export const mutationOperations = {
 	payOrderDemo,
 	failPaymentDemo,
 	updateDeliveryStatus,
+	likeReviewByAdmin,
+	replyReviewByAdmin,
 	createReview,
 	removeReviewByAdmin,
 	sendMessage,
@@ -2251,4 +2273,4 @@ export const mutationOperations = {
 	removeCommentByAdmin,
 	subscribe,
 	unsubscribe,
-};
+} as const;

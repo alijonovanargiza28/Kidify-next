@@ -1,17 +1,18 @@
+import { getAccessToken, sessionManager, cookieMutation } from './session';
 import { initializeApollo } from '../../apollo/client';
-import { userVar } from '../../apollo/store';
+import { userVar, emptyUser } from '../../apollo/store';
 import { getMe } from '../../apollo/user/marketplace-query';
 import { login, signup } from '../../apollo/user/marketplace-mutation';
-export function getJwtToken(): string {
-	return typeof window !== 'undefined' ? localStorage.getItem('accessToken') || '' : '';
+export const getJwtToken = getAccessToken;
+export function setJwtToken(token: string) { sessionManager.set(token); }
+export const updateStorage = ({ jwtToken }: { jwtToken: string }) => setJwtToken(jwtToken);
+export async function restoreAuthentication() {
+ if (typeof window === 'undefined') return false;
+ // Remove legacy credentials once; never read or migrate a long-lived stored token.
+ localStorage.removeItem('accessToken'); localStorage.removeItem('login');
+ const token = await sessionManager.restore();
+ return token ? updateUserInfo(token) : false;
 }
-export function setJwtToken(token: string) {
-	localStorage.setItem('accessToken', token);
-}
-export const updateStorage = ({ jwtToken }: { jwtToken: string }) => {
-	setJwtToken(jwtToken);
-	localStorage.setItem('login', Date.now().toString());
-};
 export const updateUserInfo = async (token: string) => {
 	if (!token) return false;
 	try {
@@ -55,11 +56,13 @@ export async function signUp(
 	if (!(await updateUserInfo(data.signup.accessToken))) throw new Error('Please sign in again.');
 }
 export function clearSession() {
-	if (typeof window !== 'undefined') localStorage.removeItem('accessToken');
-	userVar({ ...userVar(), _id: '', memberType: '', memberNick: '' });
-	void initializeApollo().clearStore();
+ sessionManager.clear();
+ if (typeof window !== 'undefined') { localStorage.removeItem('accessToken'); localStorage.removeItem('login'); }
+ userVar({ ...emptyUser });
+ void initializeApollo().clearStore();
 }
-export function logOut() {
-	clearSession();
-	if (typeof window !== 'undefined') window.location.assign('/');
+export async function logOut() {
+ clearSession();
+ try { await cookieMutation('mutation LogoutKidifySession { logout }'); }
+ finally { if (typeof window !== 'undefined') window.location.assign('/account/join'); }
 }

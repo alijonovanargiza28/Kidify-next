@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Alert, Button } from '@mui/material';
 import Top from '../Top';
 import Footer from '../Footer';
-import { getJwtToken, updateUserInfo, clearSession } from '../../auth';
+import { restoreAuthentication, clearSession } from '../../auth';
 export default function withLayout(Component: any) {
 	return function KidifyLayout(props: any) {
 		const [ready, setReady] = useState(false);
@@ -11,9 +11,9 @@ export default function withLayout(Component: any) {
 		useEffect(() => {
 			let active = true;
 			(async () => {
-				const token = getJwtToken();
 				try {
-					if (token) await updateUserInfo(token);
+					const authenticated = await restoreAuthentication();
+                    if (!authenticated && /^\/(?:en\/|ko\/|uz\/)?(?:mypage|cart|checkout|_admin)(?:\/|$)/.test(window.location.pathname)) window.location.replace('/account/join?returnTo=' + encodeURIComponent(window.location.pathname + window.location.search));
 				} catch (e: any) {
 					if (active) setError(e.message || 'Unable to restore your session');
 				}
