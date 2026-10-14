@@ -2,9 +2,9 @@ import useUiText from '../../hooks/useUiText';
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import { useMarketplace, useAction } from '../../hooks/useMarketplace';
-import ProductCard from '../property/MarketplaceProductCard';
+import ProductCard from '../product/MarketplaceProductCard';
 import { State, Pager } from '../common/Marketplace';
-export default function Favorites({ visited = false }: any) {
+export default function Favorites({ visited = false, showTitle = true }: any) {
  const uiText = useUiText();
 
 	const [page, setPage] = useState(1),
@@ -14,7 +14,7 @@ export default function Favorites({ visited = false }: any) {
 	});
 	return (
 		<>
-			<h2>{visited ? 'Recently Visited' : 'My Wishlist'}</h2>
+			{showTitle && <h2>{visited ? 'Recently Visited' : 'My Wishlist'}</h2>}
 			{visited && <Button onClick={() => void action('clearRecentlyVisited').catch(() => {})}>{uiText("Clear history")}</Button>}
 			<State query={q} empty={q.value?.list?.length === 0}>
 				<div className="product-grid">

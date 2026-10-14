@@ -9,7 +9,7 @@ export default function FollowButton({ seller, contained = false, compact = fals
  const uiText = useUiText();
  const user = useReactiveVar(userVar), router = useRouter(), action = useAction();
  const locked = useRef(false); const [busy, setBusy] = useState(false);
- if (user._id === seller._id) return null;
+ if (user._id && String(user._id) === String(seller._id)) return null;
  const followed = !!seller.meFollowed?.length;
  return <Button disabled={busy} variant={compact ? (followed ? 'contained' : 'outlined') : (contained ? 'contained' : 'text')} aria-pressed={followed} onClick={async e => {
   e.stopPropagation(); if (locked.current) return;

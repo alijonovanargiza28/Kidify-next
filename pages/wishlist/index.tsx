@@ -13,7 +13,7 @@ function Wishlist() {
 	return (
 		<RequireMember user={user}>
 			<PageTitle title="My Wishlist" />
-			{user._id && <Favorites />}
+			{user._id && <Favorites showTitle={false} />}
 		</RequireMember>
 	);
 }

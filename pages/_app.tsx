@@ -16,7 +16,7 @@ import '../scss/pc/kidify.scss';
 import '../scss/pc/kidify-references.scss';
 
 const App = ({ Component, pageProps }: AppProps) => {
-	const [theme, setTheme] = useState(
+	const [theme] = useState(
 		createTheme({
 			...(light as ThemeOptions),
 			palette: { primary: { main: '#8c4655' }, background: { default: '#fbf9f7', paper: '#ffffff' } },

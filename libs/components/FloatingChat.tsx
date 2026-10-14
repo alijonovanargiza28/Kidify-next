@@ -59,7 +59,7 @@ export default function FloatingChat() {
 		router = useRouter(),
 		apollo = useApolloClient();
 	const t = chatText(router.locale),
-		locale = ['en', 'ko', 'uz'].includes(router.locale || '') ? router.locale! : 'en';
+		locale = ['en', 'ko'].includes(router.locale || '') ? router.locale! : 'en';
  const embedded=router.pathname==='/mypage' && router.query.category==='messages' && user.memberType==='SELLER';
  const [host,setHost]=useState<HTMLElement|null>(null);
  useEffect(()=>{if(!embedded){setHost(null);return;}setOpen(true);setTab('messages');const find=()=>{const node=document.getElementById('seller-chat-host');if(node)setHost(node);};find();const observer=new MutationObserver(find);observer.observe(document.body,{childList:true,subtree:true});return()=>observer.disconnect();},[embedded,router.asPath]);

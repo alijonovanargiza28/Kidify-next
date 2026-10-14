@@ -59,7 +59,7 @@
     "s31": "Cart",
     "s32": "Notifications",
     "s33": "Account menu",
-    "s34": "Sign out",
+    "s34": "Logout",
     "s35": "Search products",
     "s36": "Product name",
     "s37": "Curated elegance and gentle essentials for life's most precious beginnings. Heirloom nursery crafts, pure organic apparel, and mindful gifting.",
@@ -375,7 +375,10 @@
     "x106": "Reviews require your paid, delivered purchase of this product.",
     "x107": "This action was already processed. Refresh and try again.",
     "x108": "Please sign in with an account allowed to perform this action.",
-    "x109": "Unable to save. Please try again."
+    "x109": "Unable to save. Please try again.",
+    "ageYear": "year",
+    "ageYears": "years",
+    "deleteReviewConfirm": "Delete this review?"
   },
   "productFilters": {
     "categories": {
@@ -522,5 +525,9 @@
     "atOrder": "Calculated when ordering",
     "itemsTotal": "Items total",
     "couponPlaceholder": "Enter coupon code"
+  },
+  "cartSelection": {
+    "selectAll": "Select all",
+    "selectProduct": "Select {{name}}"
   }
 }

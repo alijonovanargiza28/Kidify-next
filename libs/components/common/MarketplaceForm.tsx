@@ -1,13 +1,13 @@
 import styles from './MarketplaceRedesign.module.scss';
 import { useTranslation } from 'next-i18next';
-import { CameraAltOutlined, ShoppingBagOutlined, ArrowBack, SaveOutlined } from '@mui/icons-material';
+import { CameraAltOutlined, ShoppingBagOutlined, ArrowBack } from '@mui/icons-material';
 import useUiText from '../../hooks/useUiText';
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Button, TextField, MenuItem, Checkbox, FormControlLabel, Alert } from '@mui/material';
 import { inputTypes, backendEnums } from '../../types/marketplace';
 import { useAction } from '../../hooks/useMarketplace';
 import { Photo } from './Marketplace';
-import { ageRange } from '../../utils/productVariants';
+
 import { validateProductInput, validateImageSelection, productColors } from '../../utils/productForm';
 const labels: Record<string, string> = {
 	memberNick: 'Nickname',
@@ -159,6 +159,17 @@ export default function MarketplaceForm({
 						const t = d.type.replace(/[!\[\]]/g, ''),
 							required = d.type.endsWith('!') && d.default === undefined;
 						const options = (backendEnums as any)[t];
+                        if (type === 'ReviewInput' && k === 'rating') return (
+                            <fieldset key={k} className="review-star-field">
+                                <legend>{uiText(fieldLabel(k))} *</legend>
+                                <div className="review-star-options">
+                                    {[1,2,3,4,5].map(star => <label key={star}>
+                                        <input type="radio" name={`${formId}-rating`} aria-label={`${star} / 5`} value={star} checked={Number(values[k])===star} required={required} onChange={() => set(k,star)}/>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true" className={Number(values[k])>=star ? 'filled' : ''}><path d="m12 3 2.78 5.63 6.22.91-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.93 1.06-6.2L3 9.54l6.22-.91Z"/></svg>
+                                    </label>)}
+                                </div>
+                            </fieldset>
+                        );
 						if (k === 'productVariants')
 							return (
 								<div className="full" key={k}>

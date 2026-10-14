@@ -1,22 +1,28 @@
-import { ShoppingCartOutlined, LocalShippingOutlined, Inventory2Outlined, CheckCircleOutline, KeyboardArrowDown } from '@mui/icons-material';
+import { ShoppingCartOutlined, LocalShippingOutlined, Inventory2Outlined } from '@mui/icons-material';
 import { SettlementNote } from '../common/Currency';
 import useUiText from '../../hooks/useUiText';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button, TextField, MenuItem } from '@mui/material';
+import { Button, TextField, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useMarketplace, useAction } from '../../hooks/useMarketplace';
 import { State, Pager, Photo, money } from '../common/Marketplace';
 import MarketplaceForm from '../common/MarketplaceForm';
 export default function Orders({ role = 'USER' }: any) {
  const uiText = useUiText();
+ const router = useRouter();
+ const queryStatus=['PENDING','CONFIRMED','PREPARING','READY_FOR_DELIVERY','SHIPPED','DELIVERED','CANCELLED','REFUNDED'].includes(String(router.query.status)) ? String(router.query.status) : '';
 
 	const [page, setPage] = useState(1),
-		[status, setStatus] = useState(''),
-		[review, setReview] = useState<any>(null);
+		[status, setStatus] = useState(queryStatus),
+		[review, setReview] = useState<any>(null),
+        [reviewSaving, setReviewSaving] = useState(false),
+        [repeatOrderId, setRepeatOrderId] = useState('');
+    const repeatLock = useRef(false);
+    const fulfillmentLocks = useRef(new Set<string>());
+    const [updatingItems,setUpdatingItems] = useState<string[]>([]);
 	const name = role === 'ADMIN' ? 'getAllOrdersByAdmin' : role === 'SELLER' ? 'getSellerOrders' : 'getMyOrders';
-	const router = useRouter(),
-		orderId = typeof router.query.orderId === 'string' ? router.query.orderId : '';
+	const orderId = typeof router.query.orderId === 'string' ? router.query.orderId : '';
 	const list = useMarketplace(
 			name,
 			{ input: { page, limit: 10, ...(status ? { status } : {}) } },
@@ -31,18 +37,50 @@ export default function Orders({ role = 'USER' }: any) {
 				? {
 						...list,
 						loading: list.loading || moreSellerPages,
-						value: list.loading || moreSellerPages ? undefined : { list: sellerMatch ? [sellerMatch] : [] },
+						value: sellerMatch ? {list:[sellerMatch]} : list.loading || moreSellerPages ? undefined : {list:[]},
 				  }
 				: { ...detail, value: detail.value ? { list: [detail.value] } : undefined }
 			: list,
 		action = useAction();
 	useEffect(() => {
 		setPage(1);
-		setStatus('');
-	}, [orderId]);
+		setStatus(queryStatus);
+	}, [orderId,queryStatus]);
 	useEffect(() => {
 		if (moreSellerPages && !list.loading && !list.error) setPage((current) => current + 1);
 	}, [moreSellerPages, list.loading, list.error, page]);
+    const updateFulfillment = async (order: any, item: any) => {
+        if (fulfillmentLocks.current.has(item._id)) return;
+        const nextStatus = ({CONFIRMED:'PREPARING',PREPARING:'READY_FOR_DELIVERY',READY_FOR_DELIVERY:'SHIPPED',SHIPPED:'DELIVERED'} as Record<string,string>)[item.status];
+        if (!nextStatus) return;
+        fulfillmentLocks.current.add(item._id);
+        setUpdatingItems(current=>[...current,item._id]);
+        try {
+            // The returned Order updates Apollo's normalized cache without refetching the page.
+            await action('updateSellerOrderItemStatus',{orderId:order._id,itemId:item._id,status:nextStatus},{refetchActive:false});
+            // A status-filtered list may change membership; refresh only that list, retaining its cached content.
+            if (status) await list.refetch?.().catch(() => undefined);
+        } catch {
+            // Keep the existing order visible; useAction shows the server error.
+        } finally {
+            fulfillmentLocks.current.delete(item._id);
+            setUpdatingItems(current=>current.filter(id=>id!==item._id));
+        }
+    };
+    const buyAgain = async (id: string) => {
+        if (repeatLock.current) return;
+        repeatLock.current = true;
+        setRepeatOrderId(id);
+        try {
+            await action('buyAgain', {orderId: id});
+            await router.push('/cart');
+        } catch {
+            // useAction displays the server error; stay on the order when adding fails.
+        } finally {
+            repeatLock.current = false;
+            setRepeatOrderId('');
+        }
+    };
 	return (
 		<>
 			<h2>{role === 'SELLER' ? 'Seller Orders' : 'Orders'}</h2>
@@ -112,13 +150,13 @@ export default function Orders({ role = 'USER' }: any) {
 									<small>{i.status.replace(/_/g, ' ')}</small>
 									{role === 'SELLER' && o.paymentStatus === 'PAID' && ['CONFIRMED', 'PREPARING', 'READY_FOR_DELIVERY', 'SHIPPED'].includes(i.status) && (
 										<Button
-											onClick={() =>
-												void action('updateSellerOrderItemStatus', {
-													orderId: o._id,
-													itemId: i._id,
-													status: ({ CONFIRMED: 'PREPARING', PREPARING: 'READY_FOR_DELIVERY', READY_FOR_DELIVERY: 'SHIPPED', SHIPPED: 'DELIVERED' } as Record<string,string>)[i.status],
-												}).catch(() => {})
-											}
+                                            type="button"
+                                            disabled={updatingItems.includes(i._id)}
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                void updateFulfillment(o,i);
+                                            }}
 										>
 											{({ CONFIRMED: 'Start preparing', PREPARING: 'Ready for delivery', READY_FOR_DELIVERY: 'Mark shipped', SHIPPED: 'Mark delivered' } as Record<string,string>)[i.status]}
 										</Button>
@@ -152,6 +190,7 @@ export default function Orders({ role = 'USER' }: any) {
 								<>
 									{o.status === 'PENDING' && ['PENDING', 'FAILED'].includes(o.paymentStatus) && (
 										<Button
+											className="order-pay-button"
 											variant="contained"
 											onClick={() => void action('payOrderDemo', { paymentId: o.paymentId }).catch(() => {})}
 										>
@@ -162,7 +201,7 @@ export default function Orders({ role = 'USER' }: any) {
 											<Button onClick={() => void action('cancelOrder', { orderId: o._id }).catch(() => {})}>
 												{uiText("Cancel order")}</Button>
 										)}
-									<Button onClick={() => void action('buyAgain', { orderId: o._id }).catch(() => {})}>{uiText("Buy again")}</Button>
+									<Button disabled={Boolean(repeatOrderId)} onClick={() => void buyAgain(o._id)}>{uiText("Buy again")}</Button>
 								</>
 							)}
 							{role === 'ADMIN' && (
@@ -190,22 +229,35 @@ export default function Orders({ role = 'USER' }: any) {
 				))}
 				<Pager value={q.value} page={page} limit={10} onChange={setPage} />
 			</State>
-			{review && (
-				<>
-					<MarketplaceForm
-						key={review.targetId}
-						type="ReviewInput"
-						initial={review}
-						fields={['rating', 'text', 'images']}
-                        uploadTarget="review"
-						onSubmit={async (input: any) => {
-							await action('createReview', { input: { ...input, ...review } });
-							setReview(null);
-						}}
-					/>
-					<Button onClick={() => setReview(null)}>{uiText("Close review")}</Button>
-				</>
-			)}
+            <Dialog
+                open={Boolean(review)}
+                container={() => document.getElementById('pc-wrap')}
+                onClose={() => { if (!reviewSaving) setReview(null); }}
+                disableEscapeKeyDown={reviewSaving}
+                fullWidth maxWidth="sm"
+                aria-labelledby="order-review-title"
+            >
+                {review && <>
+                    <DialogTitle id="order-review-title">{uiText(review.group === 'PRODUCT' ? 'Review product' : 'Review seller')}</DialogTitle>
+                    <DialogContent>
+                        <MarketplaceForm
+                            key={`${review.group}:${review.targetId}:${review.orderId}`}
+                            type="ReviewInput"
+                            initial={review}
+                            fields={['rating', 'text', 'images']}
+                            uploadTarget="review"
+                            onSubmit={async (input: any) => {
+                                setReviewSaving(true);
+                                try {
+                                    await action('createReview', {input: {...input, ...review}});
+                                    setReview(null);
+                                } finally { setReviewSaving(false); }
+                            }}
+                        />
+                    </DialogContent>
+                    <DialogActions><Button disabled={reviewSaving} onClick={() => setReview(null)}>{uiText('Close review')}</Button></DialogActions>
+                </>}
+            </Dialog>
 		</>
 	);
 }

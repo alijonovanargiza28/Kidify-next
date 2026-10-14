@@ -44,7 +44,7 @@ function ConnectionRow({ connection, followers }: any) {
    {seller && <FollowButton seller={{...member, meFollowed}} compact/>}
    <Link href={target}>{t('connections.visit')}</Link>
   </div>
-  <IconButton className="connection-like" aria-label={t('connections.like', {name:member.memberNick})} aria-pressed={favorite.liked} disabled={favorite.busy} onClick={e=>{e.preventDefault();e.stopPropagation();void favorite.toggle();}}>
+  <IconButton className="connection-like" aria-label={t('connections.like', {name:member.memberNick})} aria-pressed={favorite.liked} disabled={favorite.busy || favorite.isSelf} onClick={e=>{e.preventDefault();e.stopPropagation();void favorite.toggle();}}>
    {favorite.liked ? <Favorite/> : <FavoriteBorder/>}
   </IconButton>
  </article>;

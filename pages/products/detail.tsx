@@ -13,14 +13,14 @@ import Favorite from '@mui/icons-material/Favorite';
 import withLayout from '../../libs/components/layout/LayoutBasic';
 import { useMarketplace, useAction } from '../../libs/hooks/useMarketplace';
 import { userVar } from '../../apollo/store';
-import { State, Photo, PageTitle, money, Pager } from '../../libs/components/common/Marketplace';
+import { State, Photo, money, Pager } from '../../libs/components/common/Marketplace';
 import ReviewCard from '../../libs/components/common/ReviewCard';
 import { ageRange, productMonths, supportsMonth, configuredAgeOptions } from '../../libs/utils/productVariants';
 import Comments from '../../libs/components/common/Comments';
 import ColorSelector from '../../libs/components/common/ColorSelector';
 import ProductDetailPhoto from '../../libs/components/common/ProductDetailPhoto';
 import { detailImages, productDetailGallery } from '../../libs/utils/productDetailImages';
-import ProductCard from '../../libs/components/property/MarketplaceProductCard';
+import ProductCard from '../../libs/components/product/MarketplaceProductCard';
 import TrustRow from '../../libs/components/common/TrustRow';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 export const getStaticProps = async ({ locale }: any) => ({
@@ -373,7 +373,7 @@ function Detail() {
 						<p className="eyebrow">{uiText("Curated for today")}</p>
 						<h2>{uiText("Today's Recommendations")}</h2>
 						<State query={today} empty={today.value?.list?.length === 0}>
-							<div className="product-grid recommendation-grid">
+							<div className="product-grid recommendation-grid related-grid">
 								{today.value?.list?.slice(0, 6).map((product: any) => (
 									<ProductCard key={product._id} product={product} />
 								))}

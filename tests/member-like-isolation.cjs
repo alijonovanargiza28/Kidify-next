@@ -3,7 +3,7 @@ for(const ext of ['.ts','.tsx'])require.extensions[ext]=(m,f)=>m._compile(ts.tra
 const {JSDOM}=require('jsdom'),dom=new JSDOM('<div id="test"></div>',{url:'http://localhost/'});for(const k of ['window','document','navigator','HTMLElement','Element','Node'])global[k]=dom.window[k];global.IS_REACT_ACT_ENVIRONMENT=true;
 const React=require('react'),{createRoot}=require('react-dom/client'),{act}=require('react-dom/test-utils');
 const {ApolloClient,ApolloProvider,InMemoryCache,ApolloLink,Observable,gql,useQuery}=require('@apollo/client');
-const viewer='viewer',target='seller',mutations=[],followActions=[],alerts=[];let rejectNext=false;
+let viewer='viewer';const target='seller',mutations=[],followActions=[],alerts=[];let rejectNext=false;
 const follow=[{__typename:'MeFollowed',followingId:target,followerId:viewer,myFollowing:true}];
 const query=gql`query SellerLikeFixture { getSellers { list { _id memberNick memberLikes memberFollowers memberViews meLiked { memberId likeRefId myFavorite } meFollowed { followingId followerId myFollowing } } } }`;
 const connections=gql`query ConnectionsLikeFixture { getMyFollowings { list { _id followingData { _id memberLikes } meLiked {memberId likeRefId myFavorite} meFollowed {followingId followerId myFollowing} } } }`;
@@ -37,5 +37,14 @@ assert.equal(cache.readQuery({query}).getSellers.list[0].memberLikes,1);assert.e
 await act(async()=>{document.querySelector('.seller-top-heart').click();await new Promise(r=>setTimeout(r,20));});
 assert.equal(button().textContent,'Unfollow');assert.equal(cache.readQuery({query}).getSellers.list[0].memberLikes,0);assert.equal(cache.readQuery({query:connections}).getMyFollowings.list[0].meLiked.length,0);
 rejectNext=true;await act(async()=>{document.querySelector('.seller-top-heart').click();await new Promise(r=>setTimeout(r,20));});assert.equal(alerts.length,1);assert.equal(button().textContent,'Unfollow');assert.equal(document.querySelector('.seller-top-heart').disabled,false);assert.equal(cache.readQuery({query}).getSellers.list[0].memberLikes,0);
+viewer=target;
+await act(async()=>root.render(React.createElement(ApolloProvider,{client},React.createElement(Harness))));
+assert.equal(document.querySelector('.seller-card-copy button'),null,'self follow button is hidden');
+assert.equal(document.querySelector('.seller-top-heart').disabled,true,'self like button is disabled');
+const before=mutations.length;
+const {useMemberFavorite}=require('../libs/hooks/useMemberFavorite');let selfFavorite;
+function SelfHook(){selfFavorite=useMemberFavorite({_id:target,meLiked:[]},target);return null;}
+await act(async()=>root.render(React.createElement(ApolloProvider,{client},React.createElement(SelfHook))));
+await act(async()=>selfFavorite.toggle());assert.equal(mutations.length,before,'self like cannot send mutation even when called directly');
 await act(async()=>root.unmount());console.log('PASS real Apollo cache: Like/Unlike preserves Follow continuously, no subscribe/unsubscribe, no global refetch, duplicate click locked, counters and relationship hearts synchronize');
 })().catch(e=>{console.error(e);process.exit(1)});

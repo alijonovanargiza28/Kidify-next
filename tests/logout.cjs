@@ -1,0 +1,40 @@
+const fs=require('fs'),assert=require('assert'),ts=require('typescript'),Module=require('module');
+require.extensions['.ts']=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020,esModuleInterop:true}}).outputText,f);
+let user={_id:'member'},cleared=0,redirects=[],alerts=[],fail=false,requests=0,resolveRequest,resolveProfile;
+const userVar=value=>value?(user=value):user;
+global.window={location:{replace:path=>redirects.push(path)}};
+global.localStorage={removeItem:()=>{}};
+global.fetch=async (_url,options)=>{
+ requests++;assert.equal(options.credentials,'include');assert(options.signal);assert.equal(options.headers['X-Kidify-CSRF'],'1');
+ if(fail)throw Error('offline');
+ return new Promise(resolve=>{resolveRequest=()=>resolve({ok:true,status:200,json:async()=>({data:{logout:true}})});});
+};
+const load=Module._load;Module._load=function(name,...args){
+ if(name.endsWith('apollo/store'))return {userVar,emptyUser:{_id:''}};
+ if(name.endsWith('apollo/client'))return {initializeApollo:()=>({clearStore:async()=>{cleared++},query:()=>new Promise(resolve=>{resolveProfile=resolve})})};
+ if(name.endsWith('marketplace-query'))return {getMe:{}};
+ if(name.endsWith('marketplace-mutation'))return {};
+ if(name==='../config')return {REACT_APP_API_GRAPHQL_URL:'http://fixture/graphql'};
+ if(name==='../sweetAlert')return {sweetErrorAlert:async msg=>alerts.push(msg)};
+ return load.call(this,name,...args);
+};
+(async()=>{
+ const {createSessionManager,sessionManager}=require('../libs/auth/session');
+ let finish,calls=0;const manager=createSessionManager(()=>{calls++;return new Promise(resolve=>finish=resolve)});
+ const pending=manager.refresh();manager.clear();finish('old-token');
+ await assert.rejects(pending,/AUTH_SESSION_CHANGED/);assert.equal(manager.get(),'');
+ await assert.rejects(manager.refresh(),/AUTH_SESSION_CHANGED/);assert.equal(calls,1);
+ assert.equal(await manager.restore(),'');manager.set('new-login');assert.equal(manager.get(),'new-login');
+ const auth=require('../libs/auth');sessionManager.set('active');
+ const profile=auth.updateUserInfo('active');
+ const logout=auth.logOut();assert.strictEqual(auth.logOut(),logout,'double click must send one mutation');
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(requests,1);
+ resolveProfile({data:{getMe:{_id:'stale-member'}}});assert.equal(await profile,false);
+ resolveRequest();await logout;
+ assert.equal(user._id,'');assert.equal(cleared,1);assert.deepEqual(redirects,['/account/join']);assert.equal(sessionManager.get(),'');
+ user={_id:'member'};sessionManager.set('active');fail=true;await auth.logOut();
+ assert.equal(alerts.length,1);assert.equal(redirects.length,1,'failed revocation must not reload and restore cookie');assert.equal(user._id,'member','Logout remains available to retry');
+ fail=false;const retry=auth.logOut();await new Promise(resolve=>setImmediate(resolve));resolveRequest();await retry;assert.equal(user._id,'');assert.equal(redirects.length,2);
+ for(const path of ['libs/components/Top.tsx','pages/mypage/index.tsx'])assert(fs.readFileSync(path,'utf8').includes('uiText("Logout")'));
+ console.log('PASS Logout: refresh race, stale profile, duplicate clicks, cookie revocation, failed request/retry, local cache cleanup and labels');
+})().catch(error=>{console.error(error);process.exit(1)});

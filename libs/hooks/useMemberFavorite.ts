@@ -8,9 +8,10 @@ import useUiText from './useUiText';
 const pending = new Set<string>();
 export function useMemberFavorite(member: any, viewerId: string) {
  const client = useApolloClient(), [busy, setBusy] = useState(false), uiText = useUiText();
- const liked = !!viewerId && !!member?.meLiked?.some((like: any) => like.myFavorite && String(like.memberId) === String(viewerId));
+ const isSelf = !!viewerId && String(viewerId) === String(member?._id);
+ const liked = !isSelf && !!viewerId && !!member?.meLiked?.some((like: any) => like.myFavorite && String(like.memberId) === String(viewerId));
  const toggle = async () => {
-  if (!viewerId || !member?._id) return;
+  if (!viewerId || !member?._id || isSelf) return;
   const key = `${viewerId}:${member._id}`;
   if (pending.has(key)) return;
   pending.add(key); setBusy(true);
@@ -41,5 +42,5 @@ export function useMemberFavorite(member: any, viewerId: string) {
   } catch (error) { await sweetErrorAlert(uiText(requestError(error))); }
   finally { pending.delete(key); setBusy(false); }
  };
- return { liked, busy, toggle };
+ return { liked, busy, isSelf, toggle };
 }

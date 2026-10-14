@@ -1,6 +1,6 @@
 import useUiText from '../../libs/hooks/useUiText';
 import React from 'react';
-import Link from 'next/link';
+
 import { useRouter } from 'next/router';
 import withLayout from '../../libs/components/layout/LayoutBasic';
 import { useMarketplace } from '../../libs/hooks/useMarketplace';

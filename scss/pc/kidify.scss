@@ -1735,7 +1735,7 @@
 
 #pc-wrap.kidify .recommendation-grid {
 	max-width: 680px;
-	margin-inline: auto;
+	margin-inline: 0;
 }
 
 /* Compact shared cards and light boutique presentation. */
@@ -2212,7 +2212,8 @@
  .rating-breakdown label { display: flex; align-items: center; gap: 12px; }
  .rating-breakdown progress { flex: 1; height: 10px; accent-color: #d990a6; }
  .review-author { display: flex; gap: 10px; align-items: center; }
- .review-author img, .review-author .photo-fallback { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+ .review-author > img, .review-author > .photo-fallback { width: 42px; height: 42px; min-width: 42px; min-height: 42px; max-width: 42px; max-height: 42px; flex: 0 0 42px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; object-position: center; overflow: hidden; }
+ .review-author > .photo-fallback { font-size: 10px; }
  .reviews-accordion [role=tab][aria-selected=true] { border-bottom: 2px solid var(--rose); }
  .reviews-accordion .home-section { margin: 16px 0; }
  .age-range-values input { width: 100%; min-width: 0; }

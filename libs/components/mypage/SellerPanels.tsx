@@ -9,16 +9,18 @@ import {backendEnums} from '../../types/marketplace';
 export function SellerCollections({user}:any){
  const {t}=useTranslation('common');
  const [page,setPage]=useState(1);const q=useMarketplace('getMyProducts',{input:{page,limit:100,search:{}}});
- return <><h2>{t('sellerRef.collections')}</h2><p>{t('sellerRef.collectionHelp')}</p><State query={q} empty={!q.value?.list?.length}><div className="seller-collections">{backendEnums.ProductCollection.map(c=>{
- const products=q.value?.list?.filter((p:any)=>p.productCollection===c)||[];
- return <Link key={c} className="panel" href={{pathname:'/products',query:{collection:c,sellerId:user._id}}}><Photo src={products[0]?.productImages?.[0]} alt={c}/><h3>{c.replace(/_/g,' ')}</h3><small>{products.length} {t('sellerRef.productsOnPage')}</small></Link>;
- })}</div><Pager value={q.value} page={page} limit={100} onChange={setPage}/></State></>;
+ const collections=backendEnums.ProductCollection.map(collection=>({
+  collection, products:q.value?.list?.filter((p:any)=>p.productCollection===collection)||[],
+ })).filter(({products})=>products.length>0);
+ return <><h2>{t('sellerRef.collections')}</h2><p>{t('sellerRef.collectionHelp')}</p><State query={q} empty={!collections.length}><div className="seller-collections">{collections.map(({collection,products})=>
+ <Link key={collection} className="panel" href={{pathname:'/products',query:{collection,sellerId:user._id}}}><Photo src={products[0]?.productImages?.[0]} alt={collection}/><h3>{collection.replace(/_/g,' ')}</h3><small>{products.length} {t('sellerRef.productsOnPage')}</small></Link>
+ )}</div><Pager value={q.value} page={page} limit={100} onChange={setPage}/></State></>;
 }
 export function SellerReviews({user}:any){
  const {t}=useTranslation('common');const [target,setTarget]=useState(''),[page,setPage]=useState(1);
  const products=useMarketplace('getMyProducts',{input:{page:1,limit:100,search:{}}});
  const q=useMarketplace('getReviews',{group:target?'PRODUCT':'SELLER',targetId:target||user._id,input:{page,limit:10}});
- return <><h2>{t('sellerRef.reviews')}</h2><select aria-label={t('sellerRef.reviews')} value={target} onChange={e=>{setTarget(e.target.value);setPage(1)}}><option value="">{t('sellerRef.storeReviews')}</option>{products.value?.list?.map((p:any)=><option key={p._id} value={p._id}>{p.productName}</option>)}</select><State query={q} empty={!q.value?.list?.length}>{q.value?.list?.map((r:any)=><ReviewCard key={r._id} review={r} sellerId={user._id}/>)}<Pager value={q.value} page={page} limit={10} onChange={setPage}/></State></>;
+ return <><h2>{t('sellerRef.reviews')}</h2><select className="seller-review-filter" aria-label={t('sellerRef.reviews')} value={target} onChange={e=>{setTarget(e.target.value);setPage(1)}}><option value="">{t('sellerRef.storeReviews')}</option>{products.value?.list?.map((p:any)=><option key={p._id} value={p._id}>{p.productName}</option>)}</select><State query={q} empty={!q.value?.list?.length}>{q.value?.list?.map((r:any)=><ReviewCard key={r._id} review={r} sellerId={user._id}/>)}<Pager value={q.value} page={page} limit={10} onChange={setPage}/></State></>;
 }
 export function SellerStatistics(){
  const {t}=useTranslation('common');const [page,setPage]=useState(1);const q=useMarketplace('getSellerOrders',{input:{page,limit:100}});

@@ -12,7 +12,7 @@ import Brands from '../../libs/components/common/Brands';
 import TrustRow from '../../libs/components/common/TrustRow';
 import ColorSelector from '../../libs/components/common/ColorSelector';
 import { productColors } from '../../libs/utils/productForm';
-import ProductCard from '../../libs/components/property/MarketplaceProductCard';
+import ProductCard from '../../libs/components/product/MarketplaceProductCard';
 import { State, Pager, PageTitle } from '../../libs/components/common/Marketplace';
 import { backendEnums } from '../../libs/types/marketplace';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';

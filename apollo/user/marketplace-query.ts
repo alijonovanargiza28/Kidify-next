@@ -898,6 +898,7 @@ export const getSellerTopReviews = gql`
 	query getSellerTopReviews($sellerId: String!) {
 		getSellerTopReviews(sellerId: $sellerId) {
 			list {
+                authorNick authorImage
 				likeCount
 				adminReply
                 replyRole

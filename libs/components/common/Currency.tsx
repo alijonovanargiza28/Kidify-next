@@ -23,7 +23,7 @@ export function CurrencyProvider({children}:{children:React.ReactNode}) {
  const [currency,setValue]=useState<Currency>('USD'),[rates,setRates]=useState<Rates|null>(null),[error,setError]=useState(false);
  useEffect(()=>{
   try {
-   const preference=localStorage.getItem('kidify.currency');if(isCurrency(preference))setValue(preference);
+   const preference=localStorage.getItem('kidify.currency');if(isCurrency(preference))setValue(preference);else if(preference)localStorage.setItem('kidify.currency','USD');
    const saved=JSON.parse(localStorage.getItem(RATE_KEY)||'null');if(usableRates(saved)&&saved.base===canonicalCurrency)setRates(saved);
   }catch{}
   let active=true;
@@ -45,7 +45,7 @@ export function CurrencySelector() {
  const [menuOpen,setMenuOpen]=useState(false);
  const status=error?(rates?t('currency.cached',{date:rates.asOf}):t('currency.unavailable',{currency:canonicalCurrency})):rates?`${t('currency.estimate')} · CBU ${rates.asOf}`:t('currency.loading');
  return <Tooltip title={menuOpen ? '' : status} disableInteractive placement="left"><Select onOpen={()=>setMenuOpen(true)} onClose={()=>setMenuOpen(false)} size="small" value={currency} onChange={e=>setCurrency(e.target.value as Currency)} inputProps={{'aria-label':t('currency.label')}} sx={{minWidth:86,fontSize:12}}>
-  {currencies.map(c=><MenuItem key={c} value={c}>{c} {{USD:'$',KRW:'₩',UZS:"so'm"}[c]}</MenuItem>)}
+  {currencies.map(c=><MenuItem key={c} value={c}>{c} {{USD:'$',KRW:'₩'}[c]}</MenuItem>)}
  </Select></Tooltip>;
 }
 export function Money({amount}:{amount:number}) {

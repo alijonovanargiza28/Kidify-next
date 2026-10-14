@@ -458,6 +458,7 @@ export const inputTypes = {
 		},
 	},
 	CheckoutInput: {
+        cartItemIds: {type: '[String!]'},
 		addressId: {
 			type: 'String!',
 		},

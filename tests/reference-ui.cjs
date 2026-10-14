@@ -1,6 +1,7 @@
 const fs=require('fs'),assert=require('assert'),Module=require('module'),ts=require('typescript');
 for(const ext of ['.ts','.tsx'])require.extensions[ext]=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020,jsx:ts.JsxEmit.React,esModuleInterop:true}}).outputText,f);
 require.extensions['.scss']=m=>m.exports={};
+require.extensions['.css']=m=>m.exports={};
 const {JSDOM}=require('jsdom'),dom=new JSDOM('<div id="test"></div>',{url:'http://localhost/'});for(const k of ['window','document','navigator','HTMLElement','Element','Node'])global[k]=dom.window[k];global.IS_REACT_ACT_ENVIRONMENT=true;
 const React=require('react'),{createRoot}=require('react-dom/client'),{act}=require('react-dom/test-utils');
 const moneyCalls=[];let mode='dashboard';const order={_id:'isolated-order',status:'SHIPPED',paymentStatus:'PAID',createdAt:new Date().toISOString(),deliveryId:'isolated-delivery',items:[{_id:'isolated-item',productId:'isolated-product',productName:'Isolated fixture',status:'SHIPPED',quantity:2,finalUnitPrice:10,finalItemPrice:20}]};

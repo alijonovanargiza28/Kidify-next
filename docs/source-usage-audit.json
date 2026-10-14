@@ -1,0 +1,724 @@
+{
+  "root": "/Users/nargizaalijonova/Desktop/Kidify-next",
+  "roots": [
+    "next-env.d.ts",
+    "next-i18next.config.js",
+    "next.config.js",
+    "pages/_admin/community/index.tsx",
+    "pages/_admin/cs/faq.tsx",
+    "pages/_admin/cs/inquiry.tsx",
+    "pages/_admin/cs/notice.tsx",
+    "pages/_admin/index.tsx",
+    "pages/_admin/properties/index.tsx",
+    "pages/_admin/users/index.tsx",
+    "pages/_app.tsx",
+    "pages/_document.tsx",
+    "pages/about/index.tsx",
+    "pages/account/join.tsx",
+    "pages/agent/detail.tsx",
+    "pages/agent/index.tsx",
+    "pages/api/exchange-rates.ts",
+    "pages/cart/OrderSummary.module.scss",
+    "pages/cart/index.tsx",
+    "pages/community/detail.tsx",
+    "pages/community/index.tsx",
+    "pages/cs/index.tsx",
+    "pages/events/index.tsx",
+    "pages/index.tsx",
+    "pages/member/index.tsx",
+    "pages/messages/index.tsx",
+    "pages/mypage/index.tsx",
+    "pages/notifications/index.tsx",
+    "pages/products/detail.tsx",
+    "pages/products/index.tsx",
+    "pages/property/detail.tsx",
+    "pages/property/index.tsx",
+    "pages/sellers/detail.tsx",
+    "pages/sellers/index.tsx",
+    "pages/wishlist/index.tsx",
+    "tests/account-connections.cjs",
+    "tests/cart-selection.cjs",
+    "tests/logout.cjs",
+    "tests/member-like-isolation.cjs",
+    "tests/order-review-actions.cjs",
+    "tests/overview-navigation.cjs",
+    "tests/product-age-unit.cjs",
+    "tests/product-detail-images.cjs",
+    "tests/purchase-age-options.cjs",
+    "tests/reference-ui.cjs",
+    "tests/reference-variants.cjs",
+    "tests/review-admin-delete.cjs",
+    "tests/run.cjs",
+    "tests/seller-fulfillment-cache.cjs"
+  ],
+  "reachable": [
+    "apollo/client.ts",
+    "apollo/store.ts",
+    "apollo/user/marketplace-mutation.ts",
+    "apollo/user/marketplace-query.ts",
+    "libs/auth/index.ts",
+    "libs/auth/session.ts",
+    "libs/chat/translations.ts",
+    "libs/chat/transport.ts",
+    "libs/components/Chat.module.scss",
+    "libs/components/Chat.tsx",
+    "libs/components/FloatingChat.module.scss",
+    "libs/components/FloatingChat.tsx",
+    "libs/components/Footer.tsx",
+    "libs/components/Top.tsx",
+    "libs/components/common/AgeRangeFilter.tsx",
+    "libs/components/common/Brands.tsx",
+    "libs/components/common/ColorSelector.tsx",
+    "libs/components/common/Comments.tsx",
+    "libs/components/common/Currency.tsx",
+    "libs/components/common/FilterInput.tsx",
+    "libs/components/common/Marketplace.tsx",
+    "libs/components/common/MarketplaceForm.tsx",
+    "libs/components/common/MarketplaceRedesign.module.scss",
+    "libs/components/common/PriceRangeFilter.tsx",
+    "libs/components/common/ProductDetailPhoto.tsx",
+    "libs/components/common/ReviewCard.tsx",
+    "libs/components/common/TrustRow.tsx",
+    "libs/components/community/TViewer.tsx",
+    "libs/components/cs/MarketplaceSupport.tsx",
+    "libs/components/homepage/stitch-assets.ts",
+    "libs/components/layout/LayoutBasic.tsx",
+    "libs/components/layout/LayoutFull.tsx",
+    "libs/components/layout/LayoutHome.tsx",
+    "libs/components/mypage/MarketplaceAccount.tsx",
+    "libs/components/mypage/MarketplaceConnections.tsx",
+    "libs/components/mypage/MarketplaceFavorites.tsx",
+    "libs/components/mypage/MarketplaceManage.tsx",
+    "libs/components/mypage/MarketplaceOrders.tsx",
+    "libs/components/mypage/SellerPanels.tsx",
+    "libs/components/product/MarketplaceProductCard.tsx",
+    "libs/components/seller/FollowButton.tsx",
+    "libs/components/seller/MarketplaceSellerCard.tsx",
+    "libs/config.ts",
+    "libs/hooks/useDebouncedRange.ts",
+    "libs/hooks/useMarketplace.ts",
+    "libs/hooks/useMemberFavorite.ts",
+    "libs/hooks/useProductFavorite.ts",
+    "libs/hooks/useUiText.ts",
+    "libs/server/exchangeRates.ts",
+    "libs/sweetAlert.ts",
+    "libs/types/customJwtPayload.ts",
+    "libs/types/marketplace.ts",
+    "libs/utils/currency.ts",
+    "libs/utils/productDetailImages.ts",
+    "libs/utils/productForm.ts",
+    "libs/utils/productVariants.ts",
+    "libs/utils/requestError.ts",
+    "libs/utils/starterBrands.ts",
+    "next-env.d.ts",
+    "next-i18next.config.js",
+    "next.config.js",
+    "pages/_admin/community/index.tsx",
+    "pages/_admin/cs/faq.tsx",
+    "pages/_admin/cs/inquiry.tsx",
+    "pages/_admin/cs/notice.tsx",
+    "pages/_admin/index.tsx",
+    "pages/_admin/properties/index.tsx",
+    "pages/_admin/users/index.tsx",
+    "pages/_app.tsx",
+    "pages/_document.tsx",
+    "pages/about/index.tsx",
+    "pages/account/join.tsx",
+    "pages/agent/detail.tsx",
+    "pages/agent/index.tsx",
+    "pages/api/exchange-rates.ts",
+    "pages/cart/OrderSummary.module.scss",
+    "pages/cart/index.tsx",
+    "pages/community/detail.tsx",
+    "pages/community/index.tsx",
+    "pages/cs/index.tsx",
+    "pages/events/index.tsx",
+    "pages/index.tsx",
+    "pages/member/index.tsx",
+    "pages/messages/index.tsx",
+    "pages/mypage/index.tsx",
+    "pages/notifications/index.tsx",
+    "pages/products/detail.tsx",
+    "pages/products/index.tsx",
+    "pages/property/detail.tsx",
+    "pages/property/index.tsx",
+    "pages/sellers/detail.tsx",
+    "pages/sellers/index.tsx",
+    "pages/wishlist/index.tsx",
+    "scss/MaterialTheme/index.ts",
+    "scss/MaterialTheme/shadow.ts",
+    "scss/MaterialTheme/typography.ts",
+    "scss/app.scss",
+    "scss/mobile/main.scss",
+    "scss/pc/about/about.scss",
+    "scss/pc/account/join.scss",
+    "scss/pc/admin/admin.scss",
+    "scss/pc/agent/agent.scss",
+    "scss/pc/agent/detail.scss",
+    "scss/pc/community/write.scss",
+    "scss/pc/cs/cs.scss",
+    "scss/pc/general.scss",
+    "scss/pc/homepage/homepage.scss",
+    "scss/pc/kidify-references.scss",
+    "scss/pc/kidify.scss",
+    "scss/pc/main.scss",
+    "scss/reset.scss",
+    "scss/variables.scss",
+    "tests/account-connections.cjs",
+    "tests/cart-selection.cjs",
+    "tests/logout.cjs",
+    "tests/member-like-isolation.cjs",
+    "tests/order-review-actions.cjs",
+    "tests/overview-navigation.cjs",
+    "tests/product-age-unit.cjs",
+    "tests/product-detail-images.cjs",
+    "tests/purchase-age-options.cjs",
+    "tests/reference-ui.cjs",
+    "tests/reference-variants.cjs",
+    "tests/review-admin-delete.cjs",
+    "tests/run.cjs",
+    "tests/seller-fulfillment-cache.cjs"
+  ],
+  "unreachable": [],
+  "dynamic": [],
+  "unresolved": [],
+  "externalUsed": [
+    "",
+    " : ",
+    "@apollo/client",
+    "@mui/icons-material",
+    "@mui/material",
+    "@toast-ui/editor",
+    "@toast-ui/react-editor",
+    "animate.css",
+    "apollo-upload-client",
+    "assert",
+    "child_process",
+    "crypto",
+    "fs",
+    "jsdom",
+    "jwt-decode",
+    "module",
+    "next",
+    "next-i18next",
+    "path",
+    "react",
+    "react-dom",
+    "reset.scss",
+    "sweetalert2",
+    "swiper",
+    "typescript",
+    "variables.scss"
+  ],
+  "edges": {
+    "apollo/client.ts": [
+      "libs/auth/session.ts",
+      "libs/config.ts"
+    ],
+    "apollo/store.ts": [
+      "libs/types/customJwtPayload.ts"
+    ],
+    "apollo/user/marketplace-mutation.ts": [],
+    "apollo/user/marketplace-query.ts": [],
+    "libs/auth/index.ts": [
+      "libs/sweetAlert.ts",
+      "libs/auth/session.ts",
+      "apollo/client.ts",
+      "apollo/store.ts",
+      "apollo/user/marketplace-query.ts",
+      "apollo/user/marketplace-mutation.ts"
+    ],
+    "libs/auth/session.ts": [
+      "apollo/store.ts",
+      "libs/config.ts"
+    ],
+    "libs/chat/translations.ts": [],
+    "libs/chat/transport.ts": [
+      "libs/auth/session.ts",
+      "libs/config.ts"
+    ],
+    "libs/components/Chat.module.scss": [],
+    "libs/components/Chat.tsx": [
+      "libs/components/Chat.module.scss",
+      "libs/chat/translations.ts"
+    ],
+    "libs/components/FloatingChat.module.scss": [],
+    "libs/components/FloatingChat.tsx": [
+      "libs/components/common/Currency.tsx",
+      "apollo/store.ts",
+      "libs/chat/transport.ts",
+      "libs/chat/translations.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/FloatingChat.module.scss"
+    ],
+    "libs/components/Footer.tsx": [
+      "libs/hooks/useUiText.ts"
+    ],
+    "libs/components/Top.tsx": [
+      "libs/components/common/Currency.tsx",
+      "libs/hooks/useUiText.ts",
+      "libs/auth/index.ts",
+      "libs/components/common/Marketplace.tsx",
+      "apollo/store.ts",
+      "libs/hooks/useMarketplace.ts"
+    ],
+    "libs/components/common/AgeRangeFilter.tsx": [
+      "libs/hooks/useDebouncedRange.ts",
+      "libs/hooks/useUiText.ts"
+    ],
+    "libs/components/common/Brands.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "libs/components/common/ColorSelector.tsx": [
+      "libs/utils/productForm.ts"
+    ],
+    "libs/components/common/Comments.tsx": [
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "libs/components/common/Currency.tsx": [
+      "libs/utils/currency.ts"
+    ],
+    "libs/components/common/FilterInput.tsx": [],
+    "libs/components/common/Marketplace.tsx": [
+      "libs/components/common/Currency.tsx",
+      "libs/hooks/useUiText.ts",
+      "libs/config.ts"
+    ],
+    "libs/components/common/MarketplaceForm.tsx": [
+      "libs/components/common/MarketplaceRedesign.module.scss",
+      "libs/hooks/useUiText.ts",
+      "libs/types/marketplace.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/utils/productForm.ts"
+    ],
+    "libs/components/common/MarketplaceRedesign.module.scss": [],
+    "libs/components/common/PriceRangeFilter.tsx": [
+      "libs/hooks/useDebouncedRange.ts",
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts"
+    ],
+    "libs/components/common/ProductDetailPhoto.tsx": [
+      "libs/components/common/Marketplace.tsx",
+      "libs/utils/productDetailImages.ts"
+    ],
+    "libs/components/common/ReviewCard.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/sweetAlert.ts",
+      "apollo/store.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/hooks/useMarketplace.ts"
+    ],
+    "libs/components/common/TrustRow.tsx": [],
+    "libs/components/community/TViewer.tsx": [],
+    "libs/components/cs/MarketplaceSupport.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/types/marketplace.ts"
+    ],
+    "libs/components/homepage/stitch-assets.ts": [],
+    "libs/components/layout/LayoutBasic.tsx": [
+      "libs/components/Top.tsx",
+      "libs/components/Footer.tsx",
+      "libs/auth/index.ts"
+    ],
+    "libs/components/layout/LayoutFull.tsx": [
+      "libs/components/layout/LayoutBasic.tsx"
+    ],
+    "libs/components/layout/LayoutHome.tsx": [
+      "libs/components/layout/LayoutBasic.tsx"
+    ],
+    "libs/components/mypage/MarketplaceAccount.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/MarketplaceForm.tsx",
+      "libs/auth/index.ts",
+      "libs/components/mypage/MarketplaceConnections.tsx"
+    ],
+    "libs/components/mypage/MarketplaceConnections.tsx": [
+      "apollo/store.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/hooks/useMemberFavorite.ts",
+      "libs/hooks/useUiText.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/seller/FollowButton.tsx"
+    ],
+    "libs/components/mypage/MarketplaceFavorites.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/product/MarketplaceProductCard.tsx",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "libs/components/mypage/MarketplaceManage.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/MarketplaceForm.tsx",
+      "apollo/store.ts",
+      "libs/sweetAlert.ts",
+      "apollo/user/marketplace-query.ts",
+      "libs/utils/starterBrands.ts"
+    ],
+    "libs/components/mypage/MarketplaceOrders.tsx": [
+      "libs/components/common/Currency.tsx",
+      "libs/hooks/useUiText.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/MarketplaceForm.tsx"
+    ],
+    "libs/components/mypage/SellerPanels.tsx": [
+      "libs/components/mypage/MarketplaceAccount.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/ReviewCard.tsx",
+      "libs/types/marketplace.ts"
+    ],
+    "libs/components/product/MarketplaceProductCard.tsx": [
+      "libs/sweetAlert.ts",
+      "libs/hooks/useProductFavorite.ts",
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/utils/productVariants.ts",
+      "libs/components/common/ColorSelector.tsx"
+    ],
+    "libs/components/seller/FollowButton.tsx": [
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/hooks/useMarketplace.ts"
+    ],
+    "libs/components/seller/MarketplaceSellerCard.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/components/seller/FollowButton.tsx",
+      "apollo/store.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/hooks/useMemberFavorite.ts"
+    ],
+    "libs/config.ts": [],
+    "libs/hooks/useDebouncedRange.ts": [],
+    "libs/hooks/useMarketplace.ts": [
+      "libs/hooks/useUiText.ts",
+      "apollo/user/marketplace-query.ts",
+      "apollo/user/marketplace-mutation.ts",
+      "libs/utils/requestError.ts",
+      "libs/sweetAlert.ts"
+    ],
+    "libs/hooks/useMemberFavorite.ts": [
+      "apollo/user/marketplace-mutation.ts",
+      "libs/utils/requestError.ts",
+      "libs/sweetAlert.ts",
+      "libs/hooks/useUiText.ts"
+    ],
+    "libs/hooks/useProductFavorite.ts": [
+      "apollo/user/marketplace-mutation.ts",
+      "libs/sweetAlert.ts",
+      "libs/utils/requestError.ts"
+    ],
+    "libs/hooks/useUiText.ts": [],
+    "libs/server/exchangeRates.ts": [
+      "libs/utils/currency.ts"
+    ],
+    "libs/sweetAlert.ts": [],
+    "libs/types/customJwtPayload.ts": [],
+    "libs/types/marketplace.ts": [],
+    "libs/utils/currency.ts": [],
+    "libs/utils/productDetailImages.ts": [
+      "libs/config.ts",
+      "libs/utils/productVariants.ts"
+    ],
+    "libs/utils/productForm.ts": [
+      "libs/utils/productVariants.ts",
+      "libs/types/marketplace.ts"
+    ],
+    "libs/utils/productVariants.ts": [],
+    "libs/utils/requestError.ts": [],
+    "libs/utils/starterBrands.ts": [],
+    "next-env.d.ts": [],
+    "next-i18next.config.js": [
+      "public/locales/en/common.json",
+      "public/locales/ko/common.json"
+    ],
+    "next.config.js": [
+      "next-i18next.config.js"
+    ],
+    "pages/_admin/community/index.tsx": [],
+    "pages/_admin/cs/faq.tsx": [],
+    "pages/_admin/cs/inquiry.tsx": [],
+    "pages/_admin/cs/notice.tsx": [],
+    "pages/_admin/index.tsx": [],
+    "pages/_admin/properties/index.tsx": [],
+    "pages/_admin/users/index.tsx": [],
+    "pages/_app.tsx": [
+      "libs/components/common/Currency.tsx",
+      "libs/components/FloatingChat.tsx",
+      "scss/MaterialTheme/index.ts",
+      "apollo/client.ts",
+      "scss/app.scss",
+      "scss/pc/main.scss",
+      "scss/mobile/main.scss",
+      "scss/pc/kidify.scss",
+      "scss/pc/kidify-references.scss"
+    ],
+    "pages/_document.tsx": [],
+    "pages/about/index.tsx": [],
+    "pages/account/join.tsx": [
+      "libs/components/layout/LayoutFull.tsx",
+      "libs/auth/index.ts"
+    ],
+    "pages/agent/detail.tsx": [
+      "pages/sellers/detail.tsx"
+    ],
+    "pages/agent/index.tsx": [
+      "pages/sellers/index.tsx"
+    ],
+    "pages/api/exchange-rates.ts": [
+      "libs/utils/currency.ts",
+      "libs/server/exchangeRates.ts"
+    ],
+    "pages/cart/OrderSummary.module.scss": [],
+    "pages/cart/index.tsx": [
+      "pages/cart/OrderSummary.module.scss",
+      "libs/components/common/Currency.tsx",
+      "libs/hooks/useUiText.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "apollo/store.ts",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/MarketplaceForm.tsx"
+    ],
+    "pages/community/detail.tsx": [
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/Comments.tsx",
+      "libs/components/community/TViewer.tsx"
+    ],
+    "pages/community/index.tsx": [
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/types/marketplace.ts"
+    ],
+    "pages/cs/index.tsx": [
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/components/cs/MarketplaceSupport.tsx",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/types/marketplace.ts"
+    ],
+    "pages/events/index.tsx": [
+      "libs/components/common/MarketplaceRedesign.module.scss",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "pages/index.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/components/layout/LayoutHome.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/TrustRow.tsx",
+      "libs/components/product/MarketplaceProductCard.tsx",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/homepage/stitch-assets.ts"
+    ],
+    "pages/member/index.tsx": [
+      "pages/sellers/detail.tsx",
+      "libs/components/layout/LayoutBasic.tsx",
+      "pages/sellers/detail.tsx"
+    ],
+    "pages/messages/index.tsx": [
+      "apollo/store.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/components/Chat.tsx",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "pages/mypage/index.tsx": [
+      "libs/components/mypage/SellerPanels.tsx",
+      "libs/hooks/useUiText.ts",
+      "apollo/store.ts",
+      "libs/auth/index.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/mypage/MarketplaceFavorites.tsx",
+      "libs/components/mypage/MarketplaceOrders.tsx",
+      "libs/components/mypage/MarketplaceManage.tsx",
+      "libs/components/mypage/MarketplaceAccount.tsx",
+      "libs/components/cs/MarketplaceSupport.tsx"
+    ],
+    "pages/notifications/index.tsx": [
+      "apollo/store.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "pages/products/detail.tsx": [
+      "libs/components/common/MarketplaceRedesign.module.scss",
+      "libs/hooks/useProductFavorite.ts",
+      "libs/hooks/useUiText.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "apollo/store.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/ReviewCard.tsx",
+      "libs/utils/productVariants.ts",
+      "libs/components/common/Comments.tsx",
+      "libs/components/common/ColorSelector.tsx",
+      "libs/components/common/ProductDetailPhoto.tsx",
+      "libs/utils/productDetailImages.ts",
+      "libs/components/product/MarketplaceProductCard.tsx",
+      "libs/components/common/TrustRow.tsx"
+    ],
+    "pages/products/index.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/components/common/PriceRangeFilter.tsx",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/FilterInput.tsx",
+      "libs/components/common/AgeRangeFilter.tsx",
+      "libs/components/common/Brands.tsx",
+      "libs/components/common/TrustRow.tsx",
+      "libs/components/common/ColorSelector.tsx",
+      "libs/utils/productForm.ts",
+      "libs/components/product/MarketplaceProductCard.tsx",
+      "libs/components/common/Marketplace.tsx",
+      "libs/types/marketplace.ts"
+    ],
+    "pages/property/detail.tsx": [
+      "pages/products/detail.tsx"
+    ],
+    "pages/property/index.tsx": [
+      "pages/products/index.tsx"
+    ],
+    "pages/sellers/detail.tsx": [
+      "libs/components/common/MarketplaceRedesign.module.scss",
+      "libs/hooks/useUiText.ts",
+      "libs/components/seller/FollowButton.tsx",
+      "libs/components/common/ReviewCard.tsx",
+      "apollo/store.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/FilterInput.tsx",
+      "libs/components/common/TrustRow.tsx",
+      "libs/types/marketplace.ts",
+      "libs/components/product/MarketplaceProductCard.tsx"
+    ],
+    "pages/sellers/index.tsx": [
+      "libs/hooks/useUiText.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/common/Marketplace.tsx",
+      "libs/components/common/FilterInput.tsx",
+      "libs/components/common/TrustRow.tsx",
+      "libs/components/seller/MarketplaceSellerCard.tsx"
+    ],
+    "pages/wishlist/index.tsx": [
+      "apollo/store.ts",
+      "libs/components/layout/LayoutBasic.tsx",
+      "libs/components/mypage/MarketplaceFavorites.tsx",
+      "libs/components/common/Marketplace.tsx"
+    ],
+    "scss/MaterialTheme/index.ts": [
+      "scss/MaterialTheme/shadow.ts",
+      "scss/MaterialTheme/typography.ts"
+    ],
+    "scss/MaterialTheme/shadow.ts": [],
+    "scss/MaterialTheme/typography.ts": [],
+    "scss/app.scss": [
+      "scss/variables.scss",
+      "scss/reset.scss"
+    ],
+    "scss/mobile/main.scss": [
+      "scss/variables.scss"
+    ],
+    "scss/pc/about/about.scss": [],
+    "scss/pc/account/join.scss": [],
+    "scss/pc/admin/admin.scss": [],
+    "scss/pc/agent/agent.scss": [],
+    "scss/pc/agent/detail.scss": [],
+    "scss/pc/community/write.scss": [],
+    "scss/pc/cs/cs.scss": [],
+    "scss/pc/general.scss": [],
+    "scss/pc/homepage/homepage.scss": [],
+    "scss/pc/kidify-references.scss": [],
+    "scss/pc/kidify.scss": [],
+    "scss/pc/main.scss": [
+      "scss/variables.scss",
+      "scss/pc/general.scss",
+      "scss/pc/homepage/homepage.scss",
+      "scss/pc/agent/agent.scss",
+      "scss/pc/agent/detail.scss",
+      "scss/pc/community/write.scss",
+      "scss/pc/cs/cs.scss",
+      "scss/pc/about/about.scss",
+      "scss/pc/account/join.scss",
+      "scss/pc/admin/admin.scss"
+    ],
+    "scss/reset.scss": [],
+    "scss/variables.scss": [],
+    "tests/account-connections.cjs": [
+      "libs/components/mypage/MarketplaceConnections.tsx"
+    ],
+    "tests/cart-selection.cjs": [
+      "pages/cart/index.tsx"
+    ],
+    "tests/logout.cjs": [
+      "libs/auth/session.ts",
+      "libs/auth/index.ts"
+    ],
+    "tests/member-like-isolation.cjs": [
+      "libs/components/seller/MarketplaceSellerCard.tsx",
+      "libs/hooks/useMemberFavorite.ts"
+    ],
+    "tests/order-review-actions.cjs": [
+      "libs/components/mypage/MarketplaceOrders.tsx"
+    ],
+    "tests/overview-navigation.cjs": [
+      "libs/components/mypage/MarketplaceAccount.tsx",
+      "libs/components/mypage/MarketplaceManage.tsx",
+      "libs/components/mypage/MarketplaceOrders.tsx"
+    ],
+    "tests/product-age-unit.cjs": [
+      "libs/components/common/MarketplaceForm.tsx",
+      "libs/types/marketplace.ts"
+    ],
+    "tests/product-detail-images.cjs": [
+      "libs/utils/productDetailImages.ts",
+      "libs/components/common/ProductDetailPhoto.tsx"
+    ],
+    "tests/purchase-age-options.cjs": [
+      "libs/utils/productVariants.ts",
+      "libs/components/product/MarketplaceProductCard.tsx"
+    ],
+    "tests/reference-ui.cjs": [
+      "libs/components/mypage/MarketplaceAccount.tsx",
+      "libs/components/mypage/MarketplaceOrders.tsx"
+    ],
+    "tests/reference-variants.cjs": [
+      "libs/utils/productVariants.ts"
+    ],
+    "tests/review-admin-delete.cjs": [
+      "libs/components/common/ReviewCard.tsx"
+    ],
+    "tests/run.cjs": [],
+    "tests/seller-fulfillment-cache.cjs": [
+      "libs/hooks/useMarketplace.ts",
+      "libs/components/mypage/MarketplaceOrders.tsx"
+    ]
+  }
+}

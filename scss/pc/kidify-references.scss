@@ -708,6 +708,8 @@
 		}
 		button:disabled {
 			opacity: 0.45;
+			text-decoration: line-through;
+			cursor: not-allowed;
 		}
 	}
 	.option-quantity {
@@ -772,7 +774,8 @@
  gap: 14px;
  > a { min-height: 146px; padding: 14px 20px; flex-direction: row; justify-content: center; gap: 18px; }
  .promo-frame { width: 112px; height: 112px; }
- .promo-frame img { width: 104px; height: 104px; }
+ // Reset the legacy 12px bottom margin so both flower masks share one center.
+ .promo-frame img { width: 104px; height: 104px; display: block; margin: 0; padding: 0; place-self: center; object-position: center; }
  .promo-copy { min-width: 0; }
  h3 { font-size: 21px; line-height: 1.2; text-align: left; margin: 0 0 12px; }
  span { padding: 10px 23px; font-size: 13px; white-space: nowrap; }
@@ -924,4 +927,57 @@
 }
 @media (max-width: 400px) {
  #pc-wrap.kidify .seller-strip.seller-portraits > .home-seller-portrait { width: 140px; height: 140px; }
+}
+
+// Seller review selector and buyer payment action: keep styles local to these controls.
+#pc-wrap.kidify .seller-review-filter {
+ display: block;
+ width: 100%;
+ max-width: 420px;
+ min-height: 44px;
+ box-sizing: border-box;
+ margin: 16px 0 24px;
+ padding: 11px 42px 11px 14px;
+ border: 1px solid #e7bbc9;
+ border-radius: 12px;
+ color: #91485b;
+ background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2391485b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 14px center / 16px no-repeat;
+ appearance: none;
+ font: inherit;
+ font-size: 14px;
+ line-height: 1.5;
+ cursor: pointer;
+ transition: border-color 150ms ease, box-shadow 150ms ease;
+ &:hover { border-color: #b86f85; }
+ &:focus-visible { outline: 2px solid #91485b; outline-offset: 2px; }
+ option { color: #332b30; background: #fff; }
+}
+#pc-wrap.kidify .reference-order .order-pay-button.MuiButton-contained {
+ color: #fff;
+ &:hover, &:focus-visible { color: #fff; }
+}
+
+#pc-wrap.kidify {
+ .review-star-field { border: 0; margin: 0; padding: 0; min-width: 0; legend { padding: 0; margin-bottom: 10px; font-size: 14px; } }
+ .review-star-options { display: flex; gap: 7px; label { position: relative; display: grid; place-items: center; width: 40px; height: 40px; cursor: pointer; } input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: pointer; } svg { width: 32px; height: 32px; fill: none; stroke: #d99a00; stroke-width: 1.6; pointer-events: none; } svg.filled { fill: #f4b400; } input:focus-visible + svg { outline: 2px solid #91485b; outline-offset: 3px; border-radius: 5px; } }
+ .cart-selection-toolbar { display: flex; align-items: center; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid #f0d9e1; font-size: 14px; color: #91485b; small { color: #796a71; } }
+ .cart-item.selectable-cart-item { align-items: flex-start; gap: 18px; > .cart-item-checkbox { flex-shrink: 0; padding: 7px 0; margin-top: 4px; } }
+ @media(max-width:700px) { .cart-item.selectable-cart-item { gap: 10px; > a { flex-shrink: 0; } > a img { width: 74px; height: 94px; } .item-copy { min-width: 0; } } }
+}
+
+#pc-wrap.kidify .support-reply-send.MuiButton-root {
+ align-self: end;
+ justify-self: start;
+ height: 38px;
+ min-height: 38px;
+ padding: 8px 22px;
+ border-radius: 10px;
+ background: #91485b;
+ color: #fff;
+ font-size: 13px;
+ line-height: 20px;
+ box-shadow: none;
+ &:hover { background: #793a4b; box-shadow: none; }
+ &:focus-visible { outline: 2px solid #91485b; outline-offset: 3px; }
+ &.Mui-disabled { background: #efd9e1; color: #9b6878; }
 }

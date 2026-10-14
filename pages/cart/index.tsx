@@ -3,11 +3,11 @@ import { useTranslation } from 'next-i18next';
 import { AddOutlined, InfoOutlined, LocationOnOutlined } from '@mui/icons-material';
 import { SettlementNote } from '../../libs/components/common/Currency';
 import useUiText from '../../libs/hooks/useUiText';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
-import { Button, TextField, MenuItem, Alert, InputAdornment } from '@mui/material';
+import { Button, TextField, MenuItem, Alert, InputAdornment, Checkbox } from '@mui/material';
 import withLayout from '../../libs/components/layout/LayoutBasic';
 import { userVar } from '../../apollo/store';
 import { useMarketplace, useAction } from '../../libs/hooks/useMarketplace';
@@ -31,6 +31,16 @@ function Cart() {
 		[newAddress, setNewAddress] = useState(false),
 		[busy, setBusy] = useState(false);
 	const requestId = useRef('');
+    const [excludedItems, setExcludedItems] = useState<string[]>([]);
+    useEffect(() => { setExcludedItems([]); requestId.current = ''; }, [user._id]);
+    const availableItems = (q.value?.items || []).filter((item:any) => item.available);
+    const selectedItems = availableItems.filter((item:any) => !excludedItems.includes(item._id));
+    const selectedSubtotal = Math.round(selectedItems.reduce((sum:number,item:any) => sum + item.lineTotal,0)*100)/100;
+    const selectedCount = selectedItems.reduce((count:number,item:any) => count + item.quantity,0);
+    const toggleItem = (id:string,checked:boolean) => {
+        setExcludedItems(current => checked ? current.filter(item => item!==id) : [...current,id]);
+        requestId.current = '';
+    };
 	const selected = address || addresses.value?.find((a: any) => a.isDefault)?._id || addresses.value?.[0]?._id || '';
 	return (
 		<RequireMember user={user}>
@@ -38,8 +48,10 @@ function Cart() {
 			<State query={q} empty={q.value?.items?.length === 0}>
 				<div className="cart-layout">
 					<section>
+                        <label className="cart-selection-toolbar"><Checkbox checked={availableItems.length>0 && selectedItems.length===availableItems.length} indeterminate={selectedItems.length>0 && selectedItems.length<availableItems.length} disabled={busy || !availableItems.length} onChange={(_,checked)=>{setExcludedItems(checked ? [] : availableItems.map((item:any)=>item._id));requestId.current='';}}/>{t('cartSelection.selectAll')} <small>({selectedItems.length}/{availableItems.length})</small></label>
 						{q.value?.items?.map((i: any) => (
-							<article className="cart-item" key={i._id}>
+							<article className="cart-item selectable-cart-item" key={i._id}>
+                                <Checkbox className="cart-item-checkbox" checked={Boolean(i.available && !excludedItems.includes(i._id))} disabled={busy || !i.available} inputProps={{'aria-label':t('cartSelection.selectProduct',{name:i.product?.productName || 'Product'})}} onChange={(_,checked)=>toggleItem(i._id,checked)}/>
 								<Link href={{ pathname: '/products/detail', query: { id: i.productId } }}>
 									<Photo src={i.product?.productImages?.[0]} alt={i.product?.productName} />
 								</Link>
@@ -83,12 +95,12 @@ function Cart() {
 					<aside className={`cart-summary ${styles.summary}`}>
 						<header className={styles.header}><h2>{uiText("Order Summary")}</h2><SettlementNote /></header>
 						<div className="summary-line">
-							<span>{uiText("Subtotal")} <small>({q.value?.items?.reduce((count:number,item:any)=>count+item.quantity,0) || 0} {t('cartSummary.items')})</small></span>
-							<strong>{money(q.value?.subtotal)}</strong>
+							<span>{uiText("Subtotal")} <small>({selectedCount} {t('cartSummary.items')})</small></span>
+							<strong>{money(selectedSubtotal)}</strong>
 						</div>
                         <div className="summary-line"><span>{t('cartSummary.deliveryFee')}</span><small>{t('cartSummary.atOrder')}</small></div>
                         <div className="summary-line"><span>{t('cartSummary.discount')}</span><small>{t('cartSummary.atOrder')}</small></div>
-                        <div className={styles.total}><span>{t('cartSummary.itemsTotal')}</span><strong>{money(q.value?.subtotal)}</strong></div>
+                        <div className={styles.total}><span>{t('cartSummary.itemsTotal')}</span><strong>{money(selectedSubtotal)}</strong></div>
                         <div className={styles.field}>
                         <label htmlFor="cart-coupon">{uiText("Coupon code")}</label>
 						<TextField
@@ -131,7 +143,7 @@ function Cart() {
                             className={styles.placeOrder}
 							variant="contained"
 							fullWidth
-							disabled={busy || !selected || !q.value?.items?.length || q.value?.items?.some((i: any) => !i.available)}
+							disabled={busy || !selected || !selectedItems.length}
 							onClick={async () => {
 								setBusy(true);
 								if (!requestId.current) requestId.current = crypto.randomUUID();
@@ -139,6 +151,7 @@ function Cart() {
 									const order = await action('createOrder', {
 										input: {
 											addressId: selected,
+                                            cartItemIds: selectedItems.map((item:any)=>item._id),
 											requestId: requestId.current,
 											...(coupon ? { couponCode: coupon } : {}),
 										},

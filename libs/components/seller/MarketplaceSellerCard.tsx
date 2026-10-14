@@ -25,7 +25,7 @@ export default function SellerCard({ seller: s, compact = false }: any) {
 	const target = { pathname: '/sellers/detail', query: { id: s._id } };
 	return (
 		<article className={`seller-card ${compact ? 'compact' : ''}`}>
-            <IconButton className="seller-top-heart" aria-label={`Like ${s.memberNick}`} aria-pressed={favorite.liked} disabled={favorite.busy} onClick={likeSeller}>{favorite.liked ? <Favorite/> : <FavoriteBorder/>}</IconButton>
+            <IconButton className="seller-top-heart" aria-label={`Like ${s.memberNick}`} aria-pressed={favorite.liked} disabled={favorite.busy || favorite.isSelf} onClick={likeSeller}>{favorite.liked ? <Favorite/> : <FavoriteBorder/>}</IconButton>
 			<Link href={target} className="seller-portrait">
 				<Photo src={s.memberImage} alt={s.memberNick} />
 				{s.memberProducts != null && <span>{s.memberProducts} {uiText("products")}</span>}

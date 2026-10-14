@@ -3,7 +3,7 @@ import useUiText from '../../hooks/useUiText';
 import React, { useEffect, useState } from 'react';
 import { Slider, Button } from '@mui/material';
 import { useMarketplace } from '../../hooks/useMarketplace';
-export default function PriceRangeFilter({ search, from, to, onCommit, onClear }: any) {
+export default function PriceRangeFilter({ from, to, onCommit, onClear }: any) {
  const uiText = useUiText();
  const commitRange = useDebouncedRange(onCommit, from, to);
 

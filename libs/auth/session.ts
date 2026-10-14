@@ -3,12 +3,14 @@ import { REACT_APP_API_GRAPHQL_URL } from '../config';
 export const isInvalidSession = (error: any) => error?.message === 'UNAUTHORIZED';
 /** Tokens are intentionally confined to this module's memory, never browser storage. */
 export function createSessionManager(transport: () => Promise<string>) {
- let accessToken = '', generation = 0, pending: Promise<string> | null = null, restored = false;
+ let accessToken = '', generation = 0, pending: Promise<string> | null = null, restored = false, refreshBlocked = false;
  return {
   get: () => accessToken,
-  set(token: string) { accessToken = token; restored = true; generation++; },
-  clear() { accessToken = ''; restored = true; generation++; },
+  set(token: string) { accessToken = token; restored = true; refreshBlocked = false; generation++; },
+  clear() { accessToken = ''; restored = true; refreshBlocked = true; generation++; },
+  async waitForRefresh() { try { await pending; } catch { /* A cleared session rejects stale refresh results. */ } },
   refresh(): Promise<string> {
+   if (refreshBlocked) return Promise.reject(new Error('AUTH_SESSION_CHANGED'));
    if (pending) return pending;
    const started = generation;
    pending = transport().then(token => {
@@ -27,8 +29,11 @@ export function createSessionManager(transport: () => Promise<string>) {
  };
 }
 export async function cookieMutation(query: string) {
+ const controller = new AbortController();
+ const timeout = setTimeout(() => controller.abort(), 10000);
+ try {
  const response = await fetch(REACT_APP_API_GRAPHQL_URL, {
-  method: 'POST', credentials: 'include', cache: 'no-store',
+  signal: controller.signal, method: 'POST', credentials: 'include', cache: 'no-store',
   headers: { 'Content-Type': 'application/json', 'X-Kidify-CSRF': '1', 'Apollo-Require-Preflight': 'true' },
   body: JSON.stringify({ query }),
  });
@@ -37,6 +42,7 @@ export async function cookieMutation(query: string) {
  if (invalid) throw new Error('UNAUTHORIZED');
  if (!response.ok || !body || body.errors?.length) throw new Error('Session temporarily unavailable. Please try again.');
  return body.data;
+ } finally { clearTimeout(timeout); }
 }
 async function fetchFreshAccess() {
  const request = async () => (await cookieMutation('mutation RefreshKidifySession { refreshToken { accessToken } }')).refreshToken.accessToken as string;

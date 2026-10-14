@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import withLayout from '../libs/components/layout/LayoutHome';
 import { useMarketplace } from '../libs/hooks/useMarketplace';
 import TrustRow from '../libs/components/common/TrustRow';
-import ProductCard from '../libs/components/property/MarketplaceProductCard';
+import ProductCard from '../libs/components/product/MarketplaceProductCard';
 import { Photo, State } from '../libs/components/common/Marketplace';
 import { stitchImages } from '../libs/components/homepage/stitch-assets';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -26,18 +26,18 @@ const heroSlides = [
 	{ image: 'feeding', alt: 'Blush and cream feeding essentials', cta: 'Explore Feeding Essentials', title: '', filter: 'type', value: 'FEEDING', position: '50% 50%' },
 ] as const;
 const categories = [
-	['Girls', 8, 'collection', 'GIRLS'],
+	['Girls', '/img/categories/girls-pink-dress.png', 'collection', 'GIRLS'],
 	['Boys', 9, 'collection', 'BOYS'],
 	['Newborn', 10, 'collection', 'NEWBORN'],
 	['Baby', 11, 'collection', 'BABY'],
-	['Shoes', 12, 'type', 'SHOES'],
+	['Shoes', '/img/categories/pink-bow-shoes.png', 'type', 'SHOES'],
 	['Accessories', '/img/hero/feeding.png', 'type', 'ACCESSORY'],
 	['Toys', 14, 'type', 'TOYS'],
 	['Baby Care', '/img/hero/baby-care.png', 'type', 'BABY_CARE'],
 	['Books', 15, 'type', 'BOOKS'],
 	['Feeding', '/img/hero/feeding.png', 'type', 'FEEDING'],
-	['Strollers', 26, 'type', 'STROLLER'],
-	['Bath Essentials', '/img/hero/baby-care.png', 'type', 'BATH'],
+	['Strollers', '/img/categories/stroller.jpg', 'type', 'STROLLER'],
+	['Bath Essentials', '/img/categories/bath-elephant.jpg', 'type', 'BATH'],
 	['Developmental Toys', '/img/hero/developmental-toys.png', 'type', 'DEVELOPMENT_TOYS'],
 	['Plush Toys', '/img/hero/plush-toys.png', 'category', 'PLUSH_TOYS'],
 	['Hats & Bonnets', 43, 'category', 'HAT'],
@@ -173,7 +173,7 @@ function Home() {
 						<SwiperSlide key={uiText(name)}>
 							<Link href={{ pathname: '/products', query: { [key]: value } }}>
 								<span className="category-frame">
-									<Photo src={typeof i === 'number' ? stitchImages[i].src : i} alt={uiText(name)} />
+									<Photo src={typeof i === 'number' ? stitchImages[i].src : i} alt={uiText(name)} style={['STROLLER', 'BATH', 'GIRLS', 'SHOES'].includes(value) ? {objectFit: 'contain'} : undefined} />
 								</span>
 								<span style={{ whiteSpace: 'nowrap' }}>{uiText(name)}</span>
 							</Link>

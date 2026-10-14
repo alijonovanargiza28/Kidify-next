@@ -4,7 +4,7 @@ import useUiText from '../../hooks/useUiText';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, TextField, MenuItem } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useMarketplace, useAction } from '../../hooks/useMarketplace';
 import { State, Pager, Photo, money } from '../common/Marketplace';
 import MarketplaceForm, { fieldLabel } from '../common/MarketplaceForm';
@@ -120,6 +120,13 @@ export function Dashboard({ role }: any) {
  const uiText = useUiText();
 
 	const cards:any={productCount:[Inventory2Outlined,'Product Count','products'],salesCount:[ShoppingCartOutlined,'Sales Count','sellerOrders'],deliveredCount:[LocalShippingOutlined,'Delivered Count','sellerOrders'],followers:[PeopleOutline,'Followers','followings'],reviewCount:[StarOutline,'Review Count','reviews'],averageRating:[StarOutline,'Average Rating','reviews'],revenue:[PaidOutlined,'Revenue','statistics']};
+ const adminDestinations:any={
+  totalUsers:{category:'users',memberType:'USER'}, totalSellers:{category:'sellers'},
+  activeSellers:{category:'sellers',memberStatus:'ACTIVE'}, blockedSellers:{category:'sellers',memberStatus:'BLOCK'},
+  totalProducts:{category:'products'}, activeProducts:{category:'products',status:'ACTIVE'},
+  totalOrders:{category:'adminOrders'}, deliveredOrders:{category:'adminOrders',status:'DELIVERED'},
+  pendingOrders:{category:'adminOrders',status:'PENDING'}, revenue:{category:'adminOrders'},
+ };
  const q = useMarketplace(role === 'ADMIN' ? 'getAdminDashboard' : 'getSellerDashboard');
 	return (
 		<>
@@ -127,8 +134,8 @@ export function Dashboard({ role }: any) {
 			<State query={q}>
 				<div className={`stats-grid ${role==='SELLER' ? 'seller-overview' : ''}`}>
 					{Object.entries(q.value || {})
-						.filter(([k, v]) => typeof v === 'number')
-                        .map(([k,v])=>{const [Icon,label,target]=cards[k]||[Inventory2Outlined,fieldLabel(k),'dashboard'];return <Link className="stat" key={k} href={{pathname:'/mypage',query:{category:role==='SELLER'?target:'dashboard'}}}><span className="stat-icon"><Icon/></span><div><span>{t(`sellerRef.metrics.${k}`,{defaultValue:uiText(label)})}</span><strong>{/revenue|totalSales/i.test(k)?money(v as number):k==='averageRating'?`${Number(v).toFixed(1)} / 5`:String(v)}</strong></div><ChevronRight/></Link>;})}
+						.filter(([, v]) => typeof v === 'number')
+                        .map(([k,v])=>{const [Icon,label,target]=cards[k]||[Inventory2Outlined,fieldLabel(k),'dashboard'];return <Link className="stat" key={k} href={{pathname:'/mypage',query:role==='SELLER'?{category:target}:adminDestinations[k]||{category:'dashboard'}}}><span className="stat-icon"><Icon/></span><div><span>{t(`sellerRef.metrics.${k}`,{defaultValue:uiText(label)})}</span><strong>{/revenue|totalSales/i.test(k)?money(v as number):k==='averageRating'?`${Number(v).toFixed(1)} / 5`:String(v)}</strong></div><ChevronRight/></Link>;})}
 				</div>
 			</State>
 		</>

@@ -170,7 +170,7 @@ function MyPage() {
 						{user.memberType==='SELLER' && <Link href={{pathname:'/sellers/detail',query:{id:user._id}}}>{uiText('Visit Boutique →')}</Link>}
                         <Link href="/messages">{uiText("Messages")}</Link>
 						<Link href="/notifications">{uiText("Notifications")}</Link>
-						<Button onClick={logOut}>{uiText("Sign out")}</Button>
+						<Button onClick={logOut}>{uiText("Logout")}</Button>
 					</aside>
 					<section className="account-content" key={category}>
 						{content}

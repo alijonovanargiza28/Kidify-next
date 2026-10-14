@@ -1,3 +1,4 @@
+import { sweetErrorAlert } from '../sweetAlert';
 import { getAccessToken, sessionManager, cookieMutation } from './session';
 import { initializeApollo } from '../../apollo/client';
 import { userVar, emptyUser } from '../../apollo/store';
@@ -17,6 +18,8 @@ export const updateUserInfo = async (token: string) => {
 	if (!token) return false;
 	try {
 		const { data } = await initializeApollo().query({ query: getMe, fetchPolicy: 'network-only' });
+		// Ignore a profile response that completed after logout or a different login.
+		if (getAccessToken() !== token) return false;
 		userVar({ ...userVar(), ...data.getMe });
 		return true;
 	} catch (e: any) {
@@ -59,10 +62,26 @@ export function clearSession() {
  sessionManager.clear();
  if (typeof window !== 'undefined') { localStorage.removeItem('accessToken'); localStorage.removeItem('login'); }
  userVar({ ...emptyUser });
- void initializeApollo().clearStore();
+ void initializeApollo().clearStore().catch(() => undefined);
 }
-export async function logOut() {
- clearSession();
- try { await cookieMutation('mutation LogoutKidifySession { logout }'); }
- finally { if (typeof window !== 'undefined') window.location.assign('/account/join'); }
+let logoutPending: Promise<void> | null = null;
+export function logOut(): Promise<void> {
+ if (logoutPending) return logoutPending;
+ // Block automatic token refresh immediately, then let any existing rotation finish.
+ sessionManager.clear();
+ logoutPending = (async () => {
+  try {
+   await sessionManager.waitForRefresh();
+   const revoke = () => cookieMutation('mutation LogoutKidifySession { logout }');
+   const locks = typeof navigator !== 'undefined' ? (navigator as any).locks : undefined;
+   const result = await (locks ? locks.request('kidify-refresh-session', revoke) : revoke());
+   if (result?.logout !== true) throw new Error('LOGOUT_NOT_CONFIRMED');
+   clearSession();
+   if (typeof window !== 'undefined') window.location.replace('/account/join');
+  } catch {
+   // Keep Logout available for retry; navigating now could restore the surviving cookie.
+   await sweetErrorAlert('Unable to log out. Please check your connection and try Logout again.');
+  } finally { logoutPending = null; }
+ })();
+ return logoutPending;
 }

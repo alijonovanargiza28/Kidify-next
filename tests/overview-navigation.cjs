@@ -1,0 +1,26 @@
+const fs=require('fs'),assert=require('assert'),ts=require('typescript'),Module=require('module');
+for(const ext of ['.ts','.tsx'])require.extensions[ext]=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020,jsx:ts.JsxEmit.React,esModuleInterop:true}}).outputText,f);
+const {JSDOM}=require('jsdom'),dom=new JSDOM('<div id="test"></div>',{url:'http://localhost/'});for(const k of ['window','document','navigator','HTMLElement','Element','Node'])global[k]=dom.window[k];global.IS_REACT_ACT_ENVIRONMENT=true;
+const React=require('react'),{createRoot}=require('react-dom/client'),{act}=require('react-dom/test-utils');let route={query:{}},requests=[];const metrics={totalUsers:3,totalSellers:4,activeSellers:4,blockedSellers:0,totalProducts:37,activeProducts:33,totalOrders:5,deliveredOrders:4,pendingOrders:1,revenue:100};
+const load=Module._load;Module._load=function(name,...args){
+ if(name==='next/router')return {useRouter:()=>route};
+ if(name==='next/link')return ({href,children,...props})=>React.createElement('a',{...props,href:href.pathname+'?'+new URLSearchParams(href.query)},children);
+ if(name==='next-i18next')return {useTranslation:()=>({t:(key,options)=>options?.defaultValue||key})};
+ if(name.includes('useUiText'))return {__esModule:true,default:()=>x=>x};
+ if(name.includes('hooks/useMarketplace'))return {useMarketplace:(name,variables)=>{requests.push({name,variables});return {value:name==='getAdminDashboard'?metrics:{list:[],metaCounter:[{total:0}]}}},useAction:()=>async()=>{}};
+ if(name.endsWith('common/Marketplace'))return {State:({children})=>children,Photo:()=>null,Pager:()=>null,money:x=>'$'+x};
+ if(name.endsWith('common/Currency'))return {SettlementNote:()=>null};
+ if(name.endsWith('common/MarketplaceForm'))return {__esModule:true,default:()=>null,fieldLabel:x=>x};
+ if(name.endsWith('../../auth'))return {};
+ if(name.endsWith('sweetAlert'))return {};
+ if(name==='@apollo/client')return {...load.call(this,name,...args),useApolloClient:()=>({}),useReactiveVar:()=>({_id:'admin',memberType:'ADMIN'})};
+ if(name==='@mui/material')return {Button:({children,onClick})=>React.createElement('button',{onClick},children),TextField:({children,label,value,onChange,select})=>React.createElement(select?'select':'input',{'aria-label':label,value,onChange},select?children:undefined),MenuItem:({children,value})=>React.createElement('option',{value},children),Alert:()=>null,Dialog:()=>null,DialogTitle:()=>null,DialogContent:()=>null,DialogActions:()=>null};
+ return load.call(this,name,...args);
+};
+(async()=>{const {Dashboard}=require('../libs/components/mypage/MarketplaceAccount'),ManageModule=require('../libs/components/mypage/MarketplaceManage'),Orders=require('../libs/components/mypage/MarketplaceOrders').default,root=createRoot(document.getElementById('test'));
+await act(async()=>root.render(React.createElement(Dashboard,{role:'ADMIN'})));const links=[...document.querySelectorAll('a.stat')];assert.equal(links.length,10);const queries=links.map(link=>Object.fromEntries(new URL(link.href).searchParams));assert.deepEqual(queries[4],{category:'products'});assert.deepEqual(queries[5],{category:'products',status:'ACTIVE'});assert(queries.every(q=>q.category!=='dashboard'));
+route={query:queries[5]};requests=[];await act(async()=>root.render(React.createElement(ManageModule.default,{section:'products',user:{_id:'admin',memberType:'ADMIN'}})));assert.deepEqual(requests.filter(r=>r.name==='getAllProductsByAdmin').pop().variables.input.search,{status:'ACTIVE'});
+route={query:queries[4]};requests=[];await act(async()=>root.render(React.createElement(ManageModule.default,{section:'products',user:{_id:'admin',memberType:'ADMIN'}})));assert.deepEqual(requests.filter(r=>r.name==='getAllProductsByAdmin').pop().variables.input.search,{});
+route={query:queries[2]};requests=[];await act(async()=>root.render(React.createElement(ManageModule.Members,{type:'SELLER'})));assert.deepEqual(requests.filter(r=>r.name==='getAllMemberByAdmin').pop().variables.input.search,{memberType:'SELLER',memberStatus:'ACTIVE',text:''});
+route={query:queries[7]};requests=[];await act(async()=>root.render(React.createElement(Orders,{role:'ADMIN'})));assert.equal(requests.filter(r=>r.name==='getAllOrdersByAdmin').pop().variables.input.status,'DELIVERED');
+await act(async()=>root.unmount());console.log('PASS admin Overview links: Total/Active Products open the admin list with correct filters; member and order cards route to matching lists instead of dashboard');})().catch(e=>{console.error(e);process.exit(1)});

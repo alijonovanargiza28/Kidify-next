@@ -1,6 +1,7 @@
+import { useRouter } from 'next/router';
 import useUiText from '../../hooks/useUiText';
-import React, { useState } from 'react';
-import { Button, TextField, MenuItem, Alert } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, TextField, Alert } from '@mui/material';
 import { useMarketplace, useAction } from '../../hooks/useMarketplace';
 import { State, Pager, Photo, money } from '../common/Marketplace';
 import MarketplaceForm from '../common/MarketplaceForm';
@@ -85,6 +86,8 @@ const configs: any = {
 };
 export default function Manage({ section, user }: any) {
  const uiText = useUiText();
+ const router = useRouter();
+ const productStatus = ['ACTIVE','PAUSE','SOLD_OUT','DELETE'].includes(String(router.query.status)) ? String(router.query.status) : '';
 
 	const client = useApolloClient();
 	const [seeding, setSeeding] = useState(false),
@@ -100,8 +103,9 @@ export default function Manage({ section, user }: any) {
 	const [search,setSearch]=useState('');
  const [page, setPage] = useState(1),
 		[editing, setEditing] = useState<any>(null);
+	useEffect(() => setPage(1), [productStatus]);
 	const input: any = { page, limit: 10 };
-	if (section === 'products') input.search = search.trim() ? {text:search.trim()} : {};
+	if (section === 'products') input.search = {...(search.trim() ? {text:search.trim()} : {}),...(productStatus ? {status:productStatus} : {})};
 	if (section === 'articles') input.search = user.memberType === 'ADMIN' ? {} : { memberId: user._id };
 	const q = useMarketplace(c.query, { input }),
 		brands = useMarketplace('getBrands', { input: { page: 1, limit: 100 } }, section !== 'products'),
@@ -250,10 +254,14 @@ export function Members({ type }: any) {
  const uiText = useUiText();
 
 	const actor = useReactiveVar(userVar);
+    const router=useRouter();
+    const memberType=type || (['USER','SELLER','ADMIN','CS'].includes(String(router.query.memberType)) ? String(router.query.memberType) : '');
+    const memberStatus=['ACTIVE','BLOCK','DELETE'].includes(String(router.query.memberStatus)) ? String(router.query.memberStatus) : '';
 	const [page, setPage] = useState(1),
 		[text, setText] = useState('');
+    useEffect(()=>setPage(1),[memberType,memberStatus]);
 	const q = useMarketplace('getAllMemberByAdmin', {
-			input: { page, limit: 10, search: { ...(type ? { memberType: type } : {}), text } },
+			input: { page, limit: 10, search: { ...(memberType ? {memberType} : {}), ...(memberStatus ? {memberStatus} : {}), text } },
 		}),
 		action = useAction();
 	return (

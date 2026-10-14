@@ -16,11 +16,11 @@ export function useMarketplace(name: keyof typeof queryOperations, variables: an
 export function useAction() {
  const uiText = useUiText();
 	const client = useApolloClient();
-	return async (name: keyof typeof mutationOperations, variables: any = {}) => {
+	return async (name: keyof typeof mutationOperations, variables: any = {}, options: { refetchActive?: boolean } = {}) => {
 		try {
 			const { data } = await client.mutate({ mutation: mutationOperations[name], variables });
 			// A failed background query must not turn a committed mutation into a failed save.
-			await client.refetchQueries({ include: 'active' }).catch(() => {
+			if (options.refetchActive !== false) await client.refetchQueries({ include: 'active' }).catch(() => {
 				console.warn('[Kidify] Saved successfully; background refresh is temporarily unavailable.');
 			});
 			return data[name];

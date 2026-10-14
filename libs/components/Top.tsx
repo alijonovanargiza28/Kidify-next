@@ -117,7 +117,7 @@ export default function Top() {
 									logOut();
 								}}
 							>
-								{uiText("Sign out")}</MenuItem>
+								{uiText("Logout")}</MenuItem>
 						)}
 					</Menu>
                     <CurrencySelector />
@@ -130,9 +130,9 @@ export default function Top() {
                             router.push(router.asPath, router.asPath, { locale: e.target.value });
                         }}
 					>
-						{['en', 'ko', 'uz'].map((l) => (
+						{['en', 'ko'].map((l) => (
 							<MenuItem key={l} value={l}>
-								<span aria-hidden="true">{{ en: '🇬🇧', ko: '🇰🇷', uz: '🇺🇿' }[l]}</span> {l.toUpperCase()}
+								<span aria-hidden="true">{{ en: '🇬🇧', ko: '🇰🇷' }[l]}</span> {l.toUpperCase()}
 							</MenuItem>
 						))}
 					</Select>

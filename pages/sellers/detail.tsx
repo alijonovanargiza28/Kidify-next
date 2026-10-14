@@ -4,19 +4,19 @@ import { useTranslation } from 'next-i18next';
 import useUiText from '../../libs/hooks/useUiText';
 import FollowButton from '../../libs/components/seller/FollowButton';
 import ReviewCard from '../../libs/components/common/ReviewCard';
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { Button } from '@mui/material';
 import { userVar } from '../../apollo/store';
 import withLayout from '../../libs/components/layout/LayoutBasic';
-import { useMarketplace, useAction } from '../../libs/hooks/useMarketplace';
+import { useMarketplace } from '../../libs/hooks/useMarketplace';
 import { State, Photo, Pager, PageTitle } from '../../libs/components/common/Marketplace';
 import FilterInput from '../../libs/components/common/FilterInput';
 import TrustRow from '../../libs/components/common/TrustRow';
 import { backendEnums } from '../../libs/types/marketplace';
-import ProductCard from '../../libs/components/property/MarketplaceProductCard';
+import ProductCard from '../../libs/components/product/MarketplaceProductCard';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 export const getStaticProps = async ({ locale }: any) => ({
 	props: { ...(await serverSideTranslations(locale, ['common'])) },
@@ -31,8 +31,7 @@ export function Seller({ member = false }: any) {
 		user = useReactiveVar(userVar),
 		page = Math.max(1, Math.floor(Number(router.query.page) || 1)),
 		text = String(router.query.text || ''),
-		sort = String(router.query.sort || 'NEWEST'),
-		action = useAction();
+		sort = String(router.query.sort || 'NEWEST');
 	const q = useMarketplace(member ? 'getMember' : 'getSeller', member ? { memberId: id } : { sellerId: id }, !id),
 		products = useMarketplace(
 			'getProducts',

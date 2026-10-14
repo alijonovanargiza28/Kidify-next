@@ -1,4 +1,4 @@
-import { CalendarMonthOutlined, ConfirmationNumberOutlined, ChevronRight, HeadsetMicOutlined } from '@mui/icons-material';
+import { CalendarMonthOutlined, ChevronRight, HeadsetMicOutlined } from '@mui/icons-material';
 import useUiText from '../../hooks/useUiText';
 import React, { useState } from 'react';
 import { Button, TextField, MenuItem, Alert } from '@mui/material';
@@ -59,7 +59,7 @@ function Ticket({ id, user, onBack }: any) {
 								<label className="field-above">
 									{uiText("Reply")}<textarea value={text} onChange={(e) => setText(e.target.value)} required maxLength={5000} />
 								</label>
-								<Button type="submit" disabled={!text.trim()}>
+								<Button className="support-reply-send" variant="contained" type="submit" disabled={!text.trim()}>
 									{uiText("Send")}</Button>
 							</form>
 						)}

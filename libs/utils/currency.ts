@@ -1,4 +1,4 @@
-export const currencies = ['USD', 'KRW', 'UZS'] as const;
+export const currencies = ['USD', 'KRW'] as const;
 export type Currency = typeof currencies[number];
 export const isCurrency = (value: any): value is Currency => currencies.includes(value);
 // Existing database amounts are USD, confirmed by the project owner. Display preference never changes this.
@@ -17,7 +17,7 @@ export function freshRates(value: any, now = Date.now()): boolean {
 }
 export function parseCentralBankRates(rows: any[], base: Currency, now = Date.now()): Rates {
  if (!Array.isArray(rows) || !isCurrency(base)) throw new Error('Invalid exchange-rate response');
- const quotes: Partial<Record<Currency, number>> = { UZS: 1 };
+ const quotes: Partial<Record<Currency, number>> = {};
  const dates: number[] = [];
  for (const currency of ['USD', 'KRW'] as const) {
   const row = rows.find(r => r?.Ccy === currency);
@@ -34,8 +34,8 @@ export function displayPrice(amount: number, selected: Currency, rates: Rates | 
  return { amount:(amount??0)*(usable ? rates.rates[selected] : 1), currency:usable ? selected : base };
 }
 export function formatCurrency(amount: number, currency: Currency, locale = 'en') {
- const numberLocale=locale === 'ko' ? 'ko-KR' : locale === 'uz' ? 'uz-UZ' : 'en-US';
+ const numberLocale=locale === 'ko' ? 'ko-KR' : 'en-US';
  const digits=currency === 'KRW' ? 0 : 2;
  const formatted=new Intl.NumberFormat(numberLocale,{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(amount);
- return currency === 'UZS' ? `${formatted} so'm` : `${currency === 'USD' ? '$' : '₩'}${formatted}`;
+ return `${currency === 'USD' ? '$' : '₩'}${formatted}`;
 }
