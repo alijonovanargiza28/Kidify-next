@@ -72,13 +72,16 @@ function Detail() {
 		setCommentsOpen(false);
 		setReviewPage(1);
 	}, [id]);
+	const saleEndsAt = p?.saleEnd;
+	const saleActive = Boolean(p?.badges?.includes('SALE'));
+	const refetchProduct = q.refetch;
 	useEffect(() => {
 		const timer = setInterval(() => {
 			setClock(Date.now());
-			if (p?.saleEnd && +new Date(p.saleEnd) <= Date.now() && p.badges?.includes('SALE')) q.refetch();
+			if (saleEndsAt && +new Date(saleEndsAt) <= Date.now() && saleActive) refetchProduct();
 		}, 60000);
 		return () => clearInterval(timer);
-	}, [p?.saleEnd, p?.badges?.join(',')]);
+	}, [saleEndsAt, saleActive, refetchProduct]);
 	const variants: any[] = p?.productVariants || [],
 		variant =
 			variants.find((v) => v._id === variantId) ||

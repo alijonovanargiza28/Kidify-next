@@ -2,7 +2,7 @@ import useUiText from '../libs/hooks/useUiText';
 import React from 'react';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination, EffectFade, A11y } from 'swiper';
+import { Autoplay, Navigation, Pagination, EffectFade, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
@@ -79,7 +79,7 @@ function Home() {
 					effect="fade"
 					fadeEffect={{ crossFade: true }}
 					speed={1000}
-					navigation
+					navigation={{ addIcons: false }}
 					pagination={{ clickable: true }}
 					autoplay={{ delay: 4500, pauseOnMouseEnter: true, disableOnInteraction: false }}
 					loop
@@ -164,7 +164,7 @@ function Home() {
 					modules={[Autoplay, Navigation, A11y]}
                     autoplay={{delay:4500,disableOnInteraction:true,pauseOnMouseEnter:true}}
                     speed={900}
-					navigation
+					navigation={{ addIcons: false }}
 					slidesPerView="auto"
 					spaceBetween={14}
 					grabCursor

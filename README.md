@@ -31,3 +31,7 @@ KIDIFY_BUILD_DIR=.next-cleanup yarn build
 See `docs/CLEANUP.md` for the import audit, removal inventory and retained compatibility/data references. Historical commit URLs in `CHANGELOG.md` are immutable provenance and are not rewritten.
 
 Production setup: [DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+## Production deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) and [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) for verified checks, deployment configuration and remaining security release blockers.

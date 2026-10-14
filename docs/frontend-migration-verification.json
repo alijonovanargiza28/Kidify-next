@@ -1,0 +1,211 @@
+{
+  "reviewedAtUTC": "2026-10-14T17:51:47+00:00",
+  "versions": {
+    "next": "16.4.0",
+    "swiper": "14.3.0",
+    "sass": "1.105.1",
+    "typescript": "5.9.3",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "handlebars": "4.7.10",
+    "form-data": "3.0.5",
+    "lodash": "4.18.1",
+    "ws": "7.5.13",
+    "minimatch": "3.1.5",
+    "brace-expansion": "1.1.21"
+  },
+  "productionAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 1,
+    "high": 0,
+    "critical": 0
+  },
+  "allDependencyAudit": {
+    "info": 0,
+    "low": 1,
+    "moderate": 1,
+    "high": 1,
+    "critical": 0
+  },
+  "sliderBefore": {
+    "metrics": {
+      "hero": {
+        "x": 70,
+        "y": 100,
+        "width": 1300,
+        "height": 880,
+        "color": "rgb(27, 28, 27)",
+        "font": "14px"
+      },
+      "heroNext": {
+        "x": 1348.96875,
+        "y": 531,
+        "width": 11.03125,
+        "height": 18,
+        "color": "rgb(255, 255, 255)",
+        "font": "14px"
+      },
+      "categoryNext": {
+        "x": 1326,
+        "y": 1572.1875,
+        "width": 34,
+        "height": 34,
+        "color": "rgb(169, 80, 107)",
+        "font": "14px"
+      },
+      "categorySlide": {
+        "x": 61.381526947021484,
+        "y": 1528.1875,
+        "width": 132,
+        "height": 144.59375,
+        "color": "rgb(27, 28, 27)",
+        "font": "14px"
+      },
+      "bullets": 4,
+      "heroSlides": 6
+    },
+    "errors": [],
+    "checks": [
+      "hero navigation",
+      "clickable pagination",
+      "category scroll",
+      "EN/KO/UZ rendering",
+      "mobile rendering"
+    ]
+  },
+  "sliderAfter": {
+    "metrics": {
+      "hero": {
+        "x": 70,
+        "y": 100,
+        "width": 1300,
+        "height": 880,
+        "color": "rgb(27, 28, 27)",
+        "font": "14px"
+      },
+      "heroNext": {
+        "x": 1348.96875,
+        "y": 531,
+        "width": 11.03125,
+        "height": 18,
+        "color": "rgb(255, 255, 255)",
+        "font": "14px"
+      },
+      "categoryNext": {
+        "x": 1326,
+        "y": 1572.1875,
+        "width": 34,
+        "height": 34,
+        "color": "rgb(169, 80, 107)",
+        "font": "14px"
+      },
+      "categorySlide": {
+        "x": 70,
+        "y": 1528.1875,
+        "width": 132,
+        "height": 144.59375,
+        "color": "rgb(27, 28, 27)",
+        "font": "14px"
+      },
+      "bullets": 4,
+      "heroSlides": 4
+    },
+    "errors": [],
+    "checks": [
+      "hero navigation",
+      "clickable pagination",
+      "category scroll",
+      "EN/KO/UZ rendering",
+      "mobile rendering"
+    ]
+  },
+  "commerceBrowser": {
+    "checks": [
+      "product gallery thumbnail",
+      "color image change",
+      "unauthenticated purchase redirects",
+      "login and return route",
+      "Apollo authenticated addToCart payload and CSRF headers",
+      "cart rendering",
+      "signup and getMe",
+      "tokens absent from localStorage"
+    ],
+    "errors": []
+  },
+  "routeManifestBefore": [
+    "/",
+    "/_admin",
+    "/_admin/community",
+    "/_admin/cs/faq",
+    "/_admin/cs/inquiry",
+    "/_admin/cs/notice",
+    "/_admin/properties",
+    "/_admin/users",
+    "/_app",
+    "/_error",
+    "/about",
+    "/account/join",
+    "/agent",
+    "/agent/detail",
+    "/cart",
+    "/community",
+    "/community/detail",
+    "/cs",
+    "/events",
+    "/member",
+    "/messages",
+    "/mypage",
+    "/notifications",
+    "/products",
+    "/products/detail",
+    "/property",
+    "/property/detail",
+    "/sellers",
+    "/sellers/detail",
+    "/wishlist"
+  ],
+  "routeManifestAfter": [
+    "/",
+    "/_admin",
+    "/_admin/community",
+    "/_admin/cs/faq",
+    "/_admin/cs/inquiry",
+    "/_admin/cs/notice",
+    "/_admin/properties",
+    "/_admin/users",
+    "/_app",
+    "/_error",
+    "/about",
+    "/account/join",
+    "/agent",
+    "/agent/detail",
+    "/cart",
+    "/community",
+    "/community/detail",
+    "/cs",
+    "/events",
+    "/member",
+    "/messages",
+    "/mypage",
+    "/notifications",
+    "/products",
+    "/products/detail",
+    "/property",
+    "/property/detail",
+    "/sellers",
+    "/sellers/detail",
+    "/wishlist"
+  ],
+  "backendUnchanged": true,
+  "existingStylesheetSourcesUnchanged": true,
+  "preExistingNpmLockfileUnchanged": true,
+  "lint": {
+    "errors": 0,
+    "warnings": 12,
+    "compilerEnabled": false,
+    "classicReact18HookRulesRetained": true
+  }
+}

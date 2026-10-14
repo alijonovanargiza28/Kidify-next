@@ -12,6 +12,7 @@ import { appWithTranslation } from 'next-i18next';
 import '../scss/app.scss';
 import '../scss/pc/main.scss';
 import '../scss/mobile/main.scss';
+import '../scss/pc/swiper-navigation.scss';
 import '../scss/pc/kidify.scss';
 import '../scss/pc/kidify-references.scss';
 

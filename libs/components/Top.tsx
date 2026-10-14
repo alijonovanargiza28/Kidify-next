@@ -130,9 +130,9 @@ export default function Top() {
                             router.push(router.asPath, router.asPath, { locale: e.target.value });
                         }}
 					>
-						{['en', 'ko'].map((l) => (
+						{['en', 'ko', 'uz'].map((l) => (
 							<MenuItem key={l} value={l}>
-								<span aria-hidden="true">{{ en: '🇬🇧', ko: '🇰🇷' }[l]}</span> {l.toUpperCase()}
+								<span aria-hidden="true">{{ en: '🇬🇧', ko: '🇰🇷', uz: '🇺🇿' }[l]}</span> {l.toUpperCase()}
 							</MenuItem>
 						))}
 					</Select>

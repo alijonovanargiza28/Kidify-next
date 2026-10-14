@@ -29,7 +29,7 @@ export default function withLayout(Component: any) {
 		return (
 			<div id="pc-wrap" className="kidify">
 				<Head>
-					<title>Kidify — Children's Marketplace</title>
+					<title>Kidify — Children&apos;s Marketplace</title>
 					<meta
 						name="description"
 						content="Shop clothing, baby essentials and thoughtful gifts from independent sellers."

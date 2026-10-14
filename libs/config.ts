@@ -1,4 +1,4 @@
-export const REACT_APP_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3007';
+export const REACT_APP_API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3007');
 
 export const REACT_APP_API_GRAPHQL_URL = process.env.REACT_APP_API_GRAPHQL_URL || `${REACT_APP_API_URL}/graphql`;
 
