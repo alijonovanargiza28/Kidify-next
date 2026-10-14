@@ -112,7 +112,7 @@ export class ChatTransport {
 					this.pending.delete(requestId);
 					reject(new Error('CONNECTION_LOST'));
 				},
-				action === 'ai' ? 50000 : 30000,
+				action === 'ai' ? 125000 : 30000,
 			);
 			this.pending.set(requestId, { payload, resolve, reject, timer, sentSocket: this.ready ? this.ws : undefined });
 			if (this.ready) this.ws?.send(JSON.stringify({ event: 'chat', data: payload }));
